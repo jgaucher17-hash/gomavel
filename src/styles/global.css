@@ -106,7 +106,7 @@ p { text-wrap: pretty; }
 /* `.marque` : le carré seul (pied de page, icônes). `.logo-svg` : [G]OMAVEL, le carré
    tenant la place de la première lettre (sa demande du 12/10 au soir). */
 .marque { width: 30px; height: 30px; flex: none; }
-.logo-svg { height: 22px; width: auto; flex: none; overflow: visible; }
+.logo-svg { height: 32px; width: auto; flex: none; overflow: visible; }
 .logo-svg .lettre, .marque { transform-box: fill-box; transform-origin: 50% 100%; }
 .logo {
   display: inline-flex; align-items: center;
@@ -149,7 +149,7 @@ p { text-wrap: pretty; }
 @media (max-width: 520px) {
   .entete nav ul { gap: 4px 20px; }
   .entete nav a { font-size: 14px; }
-  .logo-svg { height: 19px; }
+  .logo-svg { height: 28px; }
 }
 
 /* ─── Accueil : l'accroche ───────────────────────────────────────────────────── */

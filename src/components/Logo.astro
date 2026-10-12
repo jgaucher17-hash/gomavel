@@ -1,11 +1,11 @@
 ---
 /** [G]OMAVEL : le carré noir au G blanc tient la place de la première lettre. */
-import { LOGO_LARGEUR, LOGO_HAUTEUR, LOGO_CARRE as C, LOGO_LETTRES, LOGO_DECALAGE } from '../data/logo.js';
+import { LOGO_LARGEUR, LOGO_HAUTEUR, LOGO_HAUT, LOGO_CARRE as C, LOGO_LETTRES, LOGO_DECALAGE } from '../data/logo.js';
 const { lien = true } = Astro.props;
 const Balise = lien ? 'a' : 'span';
 ---
 <Balise class="logo" href={lien ? '/' : undefined} data-logo={lien ? '' : undefined}>
-  <svg class="logo-svg" viewBox={`0 0 ${LOGO_LARGEUR} ${LOGO_HAUTEUR}`} aria-hidden="true" focusable="false">
+  <svg class="logo-svg" viewBox={`0 ${LOGO_HAUT} ${LOGO_LARGEUR} ${LOGO_HAUTEUR}`} aria-hidden="true" focusable="false">
     <g class="lettre carre">
       <rect x={C.x} y={C.y} width={C.cote} height={C.cote} fill="#000" />
       <path d={C.g} fill="#fff" transform={`translate(${C.x} ${C.y}) scale(${C.echelle}) ${C.grand}`} />
