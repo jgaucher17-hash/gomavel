@@ -1,5 +1,5 @@
 /**
- * LES DEUX SEULS COMPORTEMENTS DU SITE, et rien d'autre.
+ * LES TROIS SEULS COMPORTEMENTS DU SITE, et rien d’autre.
  *
  * 1. LE LOGO SAUTE quand on le touche : le carré prend son élan et retombe, puis les
  *    lettres, une à une. C'est le geste du studio (planche du 12/10) ; sur l'accueil, le
@@ -48,6 +48,19 @@ document.querySelectorAll('[data-logo]').forEach((logo) => {
     sauter(logo);
   });
 });
+
+/* 3. LE MENU RANGÉ SE REFERME (il s'ouvre sans script, c'est un <details>) : Échap, un
+   lien touché (un lien vers « /#studio » depuis l'accueil ne change pas de page, le
+   panneau resterait par-dessus), et l'écran qui s'élargit au-delà du menu rangé. */
+const menu = document.querySelector('[data-menu]');
+if (menu) {
+  const fermer = () => { menu.open = false; };
+  menu.querySelectorAll('.menu-panneau a').forEach((a) => a.addEventListener('click', fermer));
+  addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menu.open) { fermer(); menu.querySelector('summary').focus(); }
+  });
+  matchMedia('(min-width: 861px)').addEventListener('change', (m) => { if (m.matches) fermer(); });
+}
 
 if (!reduit.matches && 'IntersectionObserver' in window) {
   const io = new IntersectionObserver((entrees) => {

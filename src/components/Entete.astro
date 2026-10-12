@@ -1,21 +1,63 @@
 ---
 import Logo from './Logo.astro';
-import { PRODUITS } from '../data/produits.js';
+import { PRODUITS, numero } from '../data/produits.js';
 import { SITE } from '../data/site.js';
 const ici = Astro.url.pathname;
-/* UN ONGLET PAR PRODUIT (sa décision du 07/10) : le menu se lit dans le catalogue. */
+/* UN ONGLET PAR PRODUIT (sa décision du 07/10) : le menu se lit dans le catalogue.
+
+   SUR TÉLÉPHONE, LE MENU SE RANGE (sa demande du 12/10, d'après supercell.com) : « Gomavel
+   à gauche, trois petits traits à droite, et quand on clique on a chaque jeu listé ».
+   Avant, les liens s'étalaient sous le logo, sur une deuxième ligne, sans rien à ouvrir.
+
+   Un <details> et pas un bouton à script : le menu s'ouvre même si le script ne charge
+   pas, et la CSP du site (scripts servis par le site seulement) n'a rien à autoriser. Le
+   script (`scripts/site.js`) ne fait que le refermer : Échap, un lien touché, l'écran
+   qui s'élargit. Les produits sont rangés par catégorie (« Jeux », un jour « Applis »)
+   dans l'ordre du catalogue. Sur grand écran, les liens restent en ligne. */
+const GROUPES = { jeu: 'Jeux', appli: 'Applis' };
+const groupes = Object.entries(GROUPES)
+  .map(([cat, titre]) => ({ titre, produits: PRODUITS.filter((p) => p.categorie === cat) }))
+  .filter((g) => g.produits.length);
+const courant = (chemin) => (ici.startsWith(chemin) ? 'page' : undefined);
 ---
 <header class="entete">
   <div class="conteneur entete-in">
     <Logo />
-    <nav aria-label="Navigation principale">
+    <nav class="nav-large" aria-label="Navigation principale">
       <ul class="liste-nue">
         {PRODUITS.map((p) => (
-          <li><a href={`/${p.slug}/`} aria-current={ici.startsWith(`/${p.slug}/`) ? 'page' : undefined}>{p.nom}</a></li>
+          <li><a href={`/${p.slug}/`} aria-current={courant(`/${p.slug}/`)}>{p.nom}</a></li>
         ))}
+        <li><a href="/nouveautes/" aria-current={courant('/nouveautes/')}>Nouveautés</a></li>
         <li><a href="/#studio">Studio</a></li>
         {SITE.emails.studio && <li><a href="/#contact">Contact</a></li>}
       </ul>
     </nav>
+    <details class="menu" data-menu>
+      <summary aria-label="Menu">
+        <span class="traits" aria-hidden="true"><span></span><span></span><span></span></span>
+      </summary>
+      <nav class="menu-panneau" aria-label="Menu">
+        {groupes.map((g) => (
+          <div class="menu-groupe">
+            <p class="label">{g.titre}</p>
+            <ul class="liste-nue">
+              {g.produits.map((p) => (
+                <li>
+                  <a href={`/${p.slug}/`} aria-current={courant(`/${p.slug}/`)}>
+                    <span class="menu-num">{numero(p.numero)}</span>{p.nom}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+        <ul class="liste-nue menu-studio">
+          <li><a href="/nouveautes/" aria-current={courant('/nouveautes/')}>Nouveautés</a></li>
+          <li><a href="/#studio">Le studio</a></li>
+          {SITE.emails.studio && <li><a href="/#contact">Contact</a></li>}
+        </ul>
+      </nav>
+    </details>
   </div>
 </header>

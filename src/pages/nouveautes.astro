@@ -1,0 +1,58 @@
+---
+/**
+ * LES NOUVEAUTÉS — sa demande du 12/10 (cf. `data/nouveautes.js`, où vivent les textes).
+ *
+ * Deux parties : « Ce qui arrive » (bientôt, en préparation), puis « Le journal » (ce qui
+ * est sorti, du plus récent au plus ancien). Chaque carte porte une étiquette comme sur
+ * supercell.com — le nom du produit, qui mène à sa page, ou « Studio ».
+ */
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { NOUVEAUTES, ETATS } from '../data/nouveautes.js';
+import { PRODUITS } from '../data/produits.js';
+
+const nomDe = (slug) => PRODUITS.find((p) => p.slug === slug)?.nom;
+const aVenir = NOUVEAUTES.filter((n) => n.etat !== 'sorti');
+const journal = NOUVEAUTES.filter((n) => n.etat === 'sorti').sort((a, b) => b.date.localeCompare(a.date));
+const date = (iso) =>
+  new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }).format(new Date(iso));
+const sections = [
+  { id: 't-arrive', titre: 'Ce qui arrive', liste: aVenir },
+  { id: 't-journal', titre: 'Le journal', liste: journal },
+].filter((s) => s.liste.length);
+---
+<Base titre="Nouveautés — Gomavel" description="Ce qui arrive dans les applications et les jeux de Gomavel, et ce qui vient de sortir.">
+  <div class="texte-page conteneur nouveautes">
+    <header class="tete">
+      <p class="label">Nouveautés</p>
+      <h1>Ce qui se prépare au studio.</h1>
+    </header>
+
+    {sections.map((s) => (
+      <section aria-labelledby={s.id} class="fil">
+        <h2 id={s.id} class="label doux">{s.titre}</h2>
+        <ul class="liste-nue cartes">
+          {s.liste.map((n) => (
+            <li class:list={['carte', { 'sans-image': !n.image }]}>
+              {n.image && (
+                <div class="cadre carte-image">
+                  <Image src={n.image.src} alt={n.image.alt} widths={[240, 480]} sizes="(max-width: 760px) 40vw, 240px" format="webp" />
+                </div>
+              )}
+              <div class="carte-texte">
+                <p class="carte-meta">
+                  {n.produit
+                    ? <a class="etiquette" href={`/${n.produit}/`}>{nomDe(n.produit)}</a>
+                    : <span class="etiquette">Studio</span>}
+                  <span class="doux">{n.etat === 'sorti' ? date(n.date) : ETATS[n.etat]}</span>
+                </p>
+                <h3>{n.titre}</h3>
+                <p>{n.texte}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+</Base>

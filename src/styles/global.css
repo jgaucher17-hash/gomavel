@@ -142,15 +142,60 @@ p { text-wrap: pretty; }
 
 /* ─── En-tête ────────────────────────────────────────────────────────────────── */
 .entete { position: relative; z-index: 10; background: var(--blanc); }
-.entete-in { min-height: var(--entete); display: flex; align-items: center; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; padding-block: 18px; }
-.entete nav ul { display: flex; gap: 6px 30px; flex-wrap: wrap; }
-.entete nav a { font-size: 15px; font-weight: 500; text-decoration: none; padding-block: 4px; }
-.entete nav a[aria-current='page'] { background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat; }
-@media (max-width: 520px) {
-  .entete nav ul { gap: 4px 20px; }
-  .entete nav a { font-size: 14px; }
+.entete-in { min-height: var(--entete); display: flex; align-items: center; justify-content: space-between; gap: 12px 24px; padding-block: 18px; }
+.nav-large ul { display: flex; gap: 6px 30px; flex-wrap: wrap; }
+.nav-large a { font-size: 15px; font-weight: 500; text-decoration: none; padding-block: 4px; }
+.nav-large a[aria-current='page'] { background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat; }
+
+/* LE MENU RANGÉ (téléphone et tablette) : trois traits à droite du logo ; ouvert, un
+   panneau noir couvre la page sous l'en-tête, comme sur supercell.com — la bande noire
+   du studio, les jeux en gros. Les trois traits deviennent une croix. */
+.menu { display: none; }
+@media (max-width: 860px) {
+  .nav-large { display: none; }
+  .menu { display: block; }
   .logo-svg { height: 28px; }
 }
+.menu summary {
+  list-style: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  display: grid; place-items: center; width: 48px; height: 48px; margin-right: -12px;
+}
+.menu summary::-webkit-details-marker { display: none; }
+.traits { position: relative; width: 26px; height: 18px; }
+.traits span {
+  position: absolute; left: 0; width: 100%; height: 2px; background: var(--noir);
+  transition: transform .35s var(--ease), opacity .2s;
+}
+.traits span:nth-child(1) { top: 0; }
+.traits span:nth-child(2) { top: 8px; }
+.traits span:nth-child(3) { top: 16px; }
+.menu[open] .traits span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.menu[open] .traits span:nth-child(2) { opacity: 0; }
+.menu[open] .traits span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+.menu-panneau {
+  position: fixed; inset: var(--entete) 0 0 0; z-index: 20; overflow-y: auto;
+  background: var(--noir); color: var(--blanc);
+  padding: 36px var(--gout) calc(40px + env(safe-area-inset-bottom));
+  display: grid; align-content: start; gap: 40px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .menu[open] .menu-panneau { animation: panneau .4s var(--ease); }
+}
+@keyframes panneau { from { opacity: 0; transform: translateY(-12px); } }
+.menu-panneau .label { color: var(--gris-noir); margin-bottom: 14px; }
+.menu-panneau a { text-decoration: none; }
+.menu-groupe li + li { margin-top: 10px; }
+.menu-groupe a {
+  display: flex; align-items: baseline; gap: 14px;
+  font-weight: 740; font-size: clamp(32px, 9vw, 48px); line-height: 1.05; letter-spacing: -.035em;
+}
+.menu-num { font-weight: 620; font-size: 12px; font-stretch: 125%; letter-spacing: .12em; color: var(--gris-noir); }
+.menu-studio { border-top: 1px solid var(--filet-noir); padding-top: 24px; }
+.menu-studio li + li { margin-top: 6px; }
+.menu-studio a { display: block; padding-block: 6px; font-size: 22px; font-weight: 560; }
+.menu-panneau a[aria-current='page'] { text-decoration: underline; text-decoration-thickness: 2px; }
+/* Menu ouvert : la page dessous ne défile plus. */
+html:has(.menu[open]) { overflow: hidden; }
 
 /* ─── Accueil : l'accroche ───────────────────────────────────────────────────── */
 .ouverture { padding-block: clamp(48px, 9vw, 132px) clamp(56px, 8vw, 112px); }
@@ -337,3 +382,43 @@ p { text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
 }
+
+/* ─── Nouveautés ─────────────────────────────────────────────────────────────── */
+/* Un fil de cartes, comme sur supercell.com : l'étiquette du produit en capitales dans un
+   filet noir, l'état ou la date, le titre, deux phrases. L'image du produit, quand il y en
+   a une, est posée dans le cadre à passe-partout (la couleur n'entre que par là). */
+.fil { margin-top: clamp(48px, 7vw, 88px); }
+.cartes { margin-top: 18px; border-top: 1px solid var(--noir); }
+.carte {
+  display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 20px clamp(24px, 4vw, 48px);
+  align-items: center; padding-block: clamp(24px, 3vw, 36px); border-bottom: 1px solid var(--filet);
+}
+.carte.sans-image { grid-template-columns: minmax(0, 1fr); }
+.carte-image { padding: var(--mat); }
+.carte-image img { width: 100%; aspect-ratio: 1; object-fit: contain; }
+.carte-texte { max-width: 60ch; }
+.carte-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; font-size: 14px; }
+.etiquette {
+  font-weight: 620; font-size: 11px; line-height: 1; font-stretch: 125%; letter-spacing: .12em; text-transform: uppercase;
+  border: 1px solid var(--noir); padding: 7px 10px 6px; text-decoration: none;
+}
+a.etiquette:hover { background: var(--noir); color: var(--blanc); }
+.carte h3 { margin-top: 14px; font-weight: 720; font-size: clamp(24px, 3vw, 34px); line-height: 1.08; letter-spacing: -.03em; }
+.carte h3 + p { margin-top: 10px; color: #333; max-width: 52ch; }
+/* Sur téléphone, l'image passe à droite de l'étiquette et du titre, et les deux phrases
+   reprennent toute la largeur dessous (sinon une colonne de quatre mots par ligne). */
+@media (max-width: 760px) {
+  .carte { grid-template-columns: minmax(0, 1fr) 96px; grid-template-areas: 'meta image' 'titre image' 'texte texte'; gap: 0 16px; align-items: start; }
+  .carte.sans-image { grid-template-areas: 'meta' 'titre' 'texte'; }
+  .carte-texte { display: contents; }
+  .carte-meta { grid-area: meta; }
+  .carte h3 { grid-area: titre; }
+  .carte h3 + p { grid-area: texte; }
+  .carte-image { grid-area: image; padding: 6px; }
+}
+
+/* ─── Accueil : le renvoi vers les nouveautés ───────────────────────────────── */
+.renvoi { padding-block: clamp(72px, 10vw, 140px); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 48px; align-items: end; }
+.renvoi .label { color: var(--gris); }
+.renvoi h2 { margin-top: 16px; font-weight: 740; font-size: clamp(32px, 4.6vw, 64px); line-height: 1; letter-spacing: -.04em; max-width: 16ch; }
+@media (max-width: 760px) { .renvoi { grid-template-columns: minmax(0, 1fr); } }

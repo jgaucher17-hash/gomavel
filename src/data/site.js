@@ -5,7 +5,13 @@
  *   - le studio fait des applications ET des jeux mobiles (des fiches de révision un
  *     jour, pas seulement des jeux) : rien ici ne doit parler du studio comme d'un
  *     studio de jeux vidéo seulement ;
- *   - l'accroche : « Petit écran, grand soin. » ;
+ *   - l'accroche : « Un pouce suffit. » (12/10 au soir). « Petit écran, grand soin. » (12/10) a été
+ *     retirée sur sa note « le slogan, faut vraiment le retravailler, mais je sais pas
+ *     comment » : « grand soin » ne disait rien qu'on puisse vérifier. Celle-ci est une
+ *     promesse concrète, vraie de Shuriken Storm (un seul geste, toucher pour sauter) et
+ *     qui devient une RÈGLE pour les produits suivants, applis de révision comprises :
+ *     tout doit se faire d'un pouce. Avis d'Astra : n° 2 de son classement, derrière
+ *     « À portée de pouce. », plus douce mais moins frappante ;
  *   - le ton : sobre pour le studio (« Gomavel… », vous), complice sur la page d'un
  *     jeu (tu), comme dans le jeu lui-même ;
  *   - rien sur la façon dont les jeux sont fabriqués ;
@@ -15,7 +21,7 @@
  */
 export const SITE = {
   nom: 'Gomavel',
-  accroche: 'Petit écran, grand soin.',
+  accroche: 'Un pouce suffit.',
   description:
     "Gomavel est un studio indépendant d'applications et de jeux mobiles, en France. Peu de produits, faits avec soin, pour iPhone et Android.",
   /* L'ADRESSE OÙ VIT LE SITE : elle fait les liens absolus (images de partage, plan du
