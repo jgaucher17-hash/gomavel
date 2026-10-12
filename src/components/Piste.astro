@@ -8,16 +8,17 @@
  * saut : `ninja-runner/tools/site-coureurs.js`, puis `outils/coureurs.mjs`), vue à
  * travers une fenêtre d'une image. Sans script, ils restent alignés sur le filet, en
  * première image de course : la page est complète. Le mouvement est dans
- * `scripts/piste.js`. Les huit skins 100 % originaux seulement (cf. produits/shuriken-storm.js).
+ * `scripts/piste.js`. Sept des huit skins 100 % originaux (cf. produits/shuriken-storm.js) :
+ * Raijin est parti le 12/10 au soir, son éclair traînait coupé derrière lui.
  */
 const bandes = import.meta.glob('../assets/coureurs/*.webp', { eager: true, query: '?url', import: 'default' });
-const ORDRE = ['kage', 'kurenai', 'raijin', 'aoi', 'tengu', 'ronin', 'yorumaru', 'kagerou'];
+const ORDRE = ['kage', 'kurenai', 'aoi', 'tengu', 'ronin', 'yorumaru', 'kagerou'];
 const coureurs = ORDRE.map((id) => ({ id, src: bandes[`../assets/coureurs/${id}.webp`] })).filter((c) => c.src);
 ---
 <div class="piste conteneur" aria-hidden="true" data-piste>
   <div class="piste-sol">
     {coureurs.map((c) => (
-      <div class="coureur" data-coureur><img src={c.src} alt="" width="2250" height="180" decoding="async" /></div>
+      <div class="coureur" data-coureur><img src={c.src} alt="" width="3375" height="180" decoding="async" /></div>
     ))}
   </div>
 </div>

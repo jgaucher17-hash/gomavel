@@ -209,9 +209,9 @@ html:has(.menu[open]) { overflow: hidden; }
    Pleine largeur, le filet noir pour sol. Sans script, les ninjas sont alignés dessus ;
    `.vivante` (scripts/piste.js) les place en absolu et les fait courir. La piste coupe
    sur les côtés (pas de défilement horizontal quand un ninja sort à droite) mais PAS en
-   haut : un grand saut monte par-dessus l'accroche. La bande fait 15 images de 150×180 ;
+   haut : un grand saut monte par-dessus l'accroche. La bande fait 15 images de 225×180 ;
    le pied est à 8/240 du bas de son image, d'où le décalage sous le filet. */
-.piste { --h: clamp(130px, 16vw, 170px); --w: calc(var(--h) * 150 / 180); overflow-x: clip; padding-bottom: clamp(32px, 6vw, 72px); }
+.piste { --h: clamp(130px, 16vw, 170px); --w: calc(var(--h) * 225 / 180); overflow-x: clip; padding-bottom: clamp(32px, 6vw, 72px); }
 .piste-sol { position: relative; height: var(--h); border-bottom: 1px solid var(--noir); display: flex; align-items: flex-end; }
 .coureur { width: var(--w); height: var(--h); overflow: hidden; flex: none; margin-bottom: calc(var(--h) * -8 / 240); -webkit-tap-highlight-color: transparent; }
 .coureur img { height: 100%; width: auto; max-width: none; }

@@ -5,8 +5,8 @@
  *   (dans ninja-runner) node tools/sans-tete.mjs /tools/site-coureurs.js > /tmp/coureurs.txt
  *   node outils/coureurs.mjs /tmp/coureurs.txt
  *
- * Chaque bande : 15 images de 200×240 (12 de course, 3 de saut), ramenées aux trois
- * quarts (150×180, soit deux pixels par point pour un ninja affiché à 90 px de haut) et
+ * Chaque bande : 15 images de 300×240 (12 de course, 3 de saut), ramenées aux trois
+ * quarts (225×180, soit deux pixels par point pour un ninja affiché à 90 px de haut) et
  * écrites en WebP transparent dans `src/assets/coureurs/<id>.webp`.
  */
 import { readFileSync } from 'node:fs';

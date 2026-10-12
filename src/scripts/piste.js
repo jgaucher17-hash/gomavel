@@ -17,7 +17,7 @@
 const piste = document.querySelector('[data-piste]');
 const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const N_COURSE = 12, MONTE = 12, SOMMET = 13, DESCEND = 14;
+const N_COURSE = 12, MONTE = 12, SOMMET = 13, DESCEND = 14, N_IMAGES = 15;
 const hasard = (a, b) => a + Math.random() * (b - a);
 
 if (piste && !reduit) {
@@ -78,7 +78,11 @@ if (piste && !reduit) {
         ? (c.vy > 1.2 ? MONTE : c.vy > -1.2 ? SOMMET : DESCEND)
         : Math.floor(c.phase * N_COURSE) % N_COURSE;
       c.el.style.transform = `translate3d(${c.x.toFixed(1)}px, ${(-c.y * h).toFixed(1)}px, 0)`;
-      c.img.style.transform = `translateX(${-image * w}px)`;
+      /* En POURCENTAGE de la bande, jamais en pixels : la fenêtre mesure 1,25 × h, un
+         nombre à virgule que offsetWidth arrondit ; à la 14ᵉ image l'arrondi faisait
+         5 px, et le bord de l'image voisine (une écharpe, un pied) apparaissait comme
+         des bouts de couleur détachés du ninja (sa note du 12/10 au soir). */
+      c.img.style.transform = `translateX(${(-image * 100 / N_IMAGES).toFixed(4)}%)`;
     }
     raf = requestAnimationFrame(pas);
   };
