@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import Editeur from '../components/Editeur.astro';
+import { SITE } from '../data/site.js';
+const h = SITE.hebergeur;
+---
+<Base titre="Mentions légales — Gomavel" description="L’éditeur et l’hébergeur du site de Gomavel.">
+  <article class="texte-page conteneur">
+    <header class="tete">
+      <p class="label">Informations</p>
+      <h1>Mentions légales</h1>
+      <p class="maj">Dernière mise à jour : 12 octobre 2026</p>
+    </header>
+    <div class="prose">
+      <h2>Éditeur du site</h2>
+      <Editeur />
+      <dl class="fiche"><div><dt>Directeur de la publication</dt><dd>{SITE.editeur.directeurPublication}</dd></div></dl>
+
+      <h2>Hébergement</h2>
+      <dl class="fiche">
+        <div><dt>Hébergeur</dt><dd>{h.nom}</dd></div>
+        <div><dt>Adresse</dt><dd>{h.adresse}</dd></div>
+        <div><dt>Téléphone</dt><dd>{h.telephone}</dd></div>
+        <div><dt>Site</dt><dd><a href={h.site} rel="noopener">{h.site.replace('https://', '')}</a></dd></div>
+      </dl>
+
+      <h2>Propriété intellectuelle</h2>
+      <p>Les textes, images et logos de ce site, ainsi que les noms Gomavel et Shuriken Storm, appartiennent à leur éditeur. Leur reproduction sans autorisation écrite est interdite.</p>
+
+      <h2>Données personnelles</h2>
+      <p>Ce site ne dépose aucun cookie et ne contient aucun traceur. Le détail est sur la page <a href="/confidentialite/">Confidentialité</a>.</p>
+
+      <h2>Crédits</h2>
+      <p>Police Archivo, par Omnibus-Type, sous licence SIL Open Font License 1.1.</p>
+    </div>
+  </article>
+</Base>

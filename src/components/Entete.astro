@@ -1,0 +1,21 @@
+---
+import Logo from './Logo.astro';
+import { PRODUITS } from '../data/produits.js';
+import { SITE } from '../data/site.js';
+const ici = Astro.url.pathname;
+/* UN ONGLET PAR PRODUIT (sa décision du 07/10) : le menu se lit dans le catalogue. */
+---
+<header class="entete">
+  <div class="conteneur entete-in">
+    <Logo />
+    <nav aria-label="Navigation principale">
+      <ul class="liste-nue">
+        {PRODUITS.map((p) => (
+          <li><a href={`/${p.slug}/`} aria-current={ici.startsWith(`/${p.slug}/`) ? 'page' : undefined}>{p.nom}</a></li>
+        ))}
+        <li><a href="/#studio">Studio</a></li>
+        {SITE.emails.studio && <li><a href="/#contact">Contact</a></li>}
+      </ul>
+    </nav>
+  </div>
+</header>

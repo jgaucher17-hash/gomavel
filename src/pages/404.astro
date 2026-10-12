@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base titre="Page introuvable — Gomavel" description="Cette page est tombée dans un trou." indexer={false}>
+  <section class="trou conteneur" aria-labelledby="t-trou">
+    <p class="label doux">Erreur 404</p>
+    <h1 id="t-trou">Cette page est tombée dans un trou.</h1>
+    <p class="retour"><a class="fleche" href="/"><span aria-hidden="true">←</span> Revenir à l’accueil</a></p>
+
+    <div class="jeu404">
+      <div class="cadre" data-trou tabindex="0" aria-label="Petit jeu : appuie sur Espace ou touche le cadre pour sauter les trous, deux fois pour un double saut.">
+        <canvas aria-hidden="true"></canvas>
+      </div>
+      <div class="jeu404-bas">
+        <span>Un geste&nbsp;: sauter. Deux fois pour le double saut.</span>
+        <span><output data-score aria-live="polite"></output> <span data-record></span></span>
+      </div>
+    </div>
+  </section>
+  <script>
+    import '../scripts/trou.js';
+  </script>
+</Base>

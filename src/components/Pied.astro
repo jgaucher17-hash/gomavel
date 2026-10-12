@@ -1,0 +1,36 @@
+---
+import Marque from './Marque.astro';
+import { PRODUITS } from '../data/produits.js';
+import { SITE } from '../data/site.js';
+---
+<footer class="pied">
+  <div class="conteneur pied-in">
+    <div class="pied-marque">
+      <Marque />
+      <p>{SITE.accroche}</p>
+    </div>
+    <nav aria-label="Pied de page">
+      <div>
+        <p class="label">Catalogue</p>
+        <ul class="liste-nue">
+          {PRODUITS.map((p) => <li><a href={`/${p.slug}/`}>{p.nom}</a></li>)}
+        </ul>
+      </div>
+      <div>
+        <p class="label">Studio</p>
+        <ul class="liste-nue">
+          <li><a href="/#studio">Le studio</a></li>
+          {SITE.emails.studio && <li><a href="/#contact">Contact</a></li>}
+        </ul>
+      </div>
+      <div>
+        <p class="label">Informations</p>
+        <ul class="liste-nue">
+          <li><a href="/mentions-legales/">Mentions légales</a></li>
+          <li><a href="/confidentialite/">Confidentialité</a></li>
+        </ul>
+      </div>
+    </nav>
+    <p class="pied-bas"><span>© {new Date().getFullYear()} Gomavel</span><span>Studio indépendant, en France</span></p>
+  </div>
+</footer>

@@ -1,0 +1,37 @@
+---
+/** La page de support d'un produit (l'« URL d'assistance » que demande l'App Store). */
+import Base from '../../layouts/Base.astro';
+import Editeur from '../../components/Editeur.astro';
+import { PRODUITS } from '../../data/produits.js';
+
+export function getStaticPaths() {
+  const textes = import.meta.glob('../../produits/*/support.md', { eager: true });
+  return PRODUITS.flatMap((p) => {
+    const t = textes[`../../produits/${p.slug}/support.md`];
+    return t ? [{ params: { produit: p.slug }, props: { p, t } }] : [];
+  });
+}
+const { p, t } = Astro.props;
+const { Content } = t;
+---
+<Base titre={`Support — ${p.nom}`} description={`Une question, un bug, une idée sur ${p.nom} : comment joindre le studio.`} image={`/og/${p.slug}.png`}>
+  <article class="texte-page conteneur">
+    <header class="tete">
+      <p class="label"><a class="lien" href={`/${p.slug}/`}>{p.nom}</a></p>
+      <h1>Support</h1>
+      <p class="maj">Dernière mise à jour : {t.frontmatter.maj}</p>
+    </header>
+    <div class="prose">
+      <h2>Une question, un bug, une idée</h2>
+      {p.contact ? (
+        <p>Écris à <a href={`mailto:${p.contact}`}>{p.contact}</a>. Le studio est petit&nbsp;: les réponses ne sont pas instantanées, mais chaque message est lu.</p>
+      ) : (
+        <p class="encart">L’adresse de contact de {p.nom} sera publiée ici avant la sortie du jeu.</p>
+      )}
+      <Content />
+      <h2>Identité de l’éditeur</h2>
+      <p>Ces informations sont celles que demandent l’App Store et Google Play aux professionnels qui publient dans l’Union européenne.</p>
+      <Editeur contact={p.contact} />
+    </div>
+  </article>
+</Base>

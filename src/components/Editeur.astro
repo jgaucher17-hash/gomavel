@@ -1,0 +1,21 @@
+---
+/** L'identité de l'éditeur, telle que la loi et les boutiques la demandent. Un champ
+    vide se lit « à compléter » : jamais une valeur inventée. */
+import { SITE } from '../data/site.js';
+const { contact = SITE.emails.studio } = Astro.props;
+const e = SITE.editeur;
+const lignes = [
+  ['Éditeur', `${e.nom} ${e.mention}, sous le nom commercial ${e.nomCommercial}`],
+  ['Forme', e.forme],
+  ['SIREN', e.siren],
+  ['Adresse', e.adresse],
+  ['Téléphone', e.telephone],
+  ['E-mail', contact],
+  ['TVA', e.tva],
+];
+---
+<dl class="fiche">
+  {lignes.map(([k, v]) => (
+    <div><dt>{k}</dt><dd class={v ? undefined : 'vide'}>{v || 'à compléter avant l’ouverture'}</dd></div>
+  ))}
+</dl>

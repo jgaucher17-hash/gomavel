@@ -1,0 +1,66 @@
+/**
+ * LES DEUX SEULS COMPORTEMENTS DU SITE, et rien d'autre.
+ *
+ * 1. LE LOGO SAUTE quand on le touche : le carré prend son élan et retombe, puis les
+ *    lettres, une à une. C'est le geste du studio (planche du 12/10) ; sur l'accueil, le
+ *    toucher remonte en haut au lieu de recharger la page.
+ * 2. LES BLOCS APPARAISSENT quand on descend jusqu'à eux. Seulement ceux qui sont encore
+ *    sous l'écran au chargement : ce qu'on voit déjà ne clignote jamais, et sans script
+ *    la page est complète.
+ *
+ * « Moins de mouvement » demandé par le téléphone : le logo ne saute plus, les blocs sont
+ * là d'emblée.
+ */
+const reduit = matchMedia('(prefers-reduced-motion: reduce)');
+
+function sauter(logo) {
+  if (reduit.matches || !logo.animate) return;
+  const marque = logo.querySelector('.marque');
+  marque?.animate(
+    [
+      { transform: 'none' },
+      { transform: 'scale(1.1, .86)', offset: 0.16 },
+      { transform: 'translateY(-38%) scale(.94, 1.08)', offset: 0.5 },
+      { transform: 'translateY(0) scale(1.08, .9)', offset: 0.82 },
+      { transform: 'none' },
+    ],
+    { duration: 640, easing: 'cubic-bezier(.33,.66,.36,1)' },
+  );
+  logo.querySelectorAll('.lettre').forEach((l, i) => {
+    l.animate(
+      [
+        { transform: 'none' },
+        { transform: 'translateY(-34%) scale(.96, 1.05)', offset: 0.45 },
+        { transform: 'translateY(0) scale(1.06, .9)', offset: 0.8 },
+        { transform: 'none' },
+      ],
+      { duration: 560, delay: 90 + i * 45, easing: 'cubic-bezier(.33,.66,.36,1)' },
+    );
+  });
+}
+
+document.querySelectorAll('[data-logo]').forEach((logo) => {
+  logo.addEventListener('click', (e) => {
+    if (location.pathname === '/') {
+      e.preventDefault();
+      if (scrollY > 0) scrollTo({ top: 0, behavior: reduit.matches ? 'auto' : 'smooth' });
+    }
+    sauter(logo);
+  });
+});
+
+if (!reduit.matches && 'IntersectionObserver' in window) {
+  const io = new IntersectionObserver((entrees) => {
+    for (const e of entrees) {
+      if (!e.isIntersecting) continue;
+      e.target.classList.add('apparu');
+      e.target.classList.remove('attend');
+      io.unobserve(e.target);
+    }
+  }, { rootMargin: '0px 0px -8% 0px' });
+  for (const el of document.querySelectorAll('[data-apparait]')) {
+    if (el.getBoundingClientRect().top < innerHeight * 0.92) continue;
+    el.classList.add('attend');
+    io.observe(el);
+  }
+}

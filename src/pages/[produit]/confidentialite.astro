@@ -1,0 +1,32 @@
+---
+/** La politique de confidentialité d'un produit : l'adresse que demandent Apple et Google. */
+import Base from '../../layouts/Base.astro';
+import Editeur from '../../components/Editeur.astro';
+import { PRODUITS } from '../../data/produits.js';
+
+export function getStaticPaths() {
+  const textes = import.meta.glob('../../produits/*/confidentialite.md', { eager: true });
+  return PRODUITS.flatMap((p) => {
+    const t = textes[`../../produits/${p.slug}/confidentialite.md`];
+    return t ? [{ params: { produit: p.slug }, props: { p, t } }] : [];
+  });
+}
+const { p, t } = Astro.props;
+const { Content } = t;
+---
+<Base titre={`Confidentialité — ${p.nom}`} description={`Ce que ${p.nom} enregistre, ce qu'il ne fait pas, et tes droits.`} image={`/og/${p.slug}.png`}>
+  <article class="texte-page conteneur">
+    <header class="tete">
+      <p class="label"><a class="lien" href={`/${p.slug}/`}>{p.nom}</a></p>
+      <h1>Politique de confidentialité</h1>
+      <p class="maj">Dernière mise à jour : {t.frontmatter.maj}</p>
+    </header>
+    <div class="prose">
+      <Content />
+      <h2>Qui est responsable</h2>
+      <p>{p.nom} est édité par Gomavel.</p>
+      <Editeur contact={p.contact} />
+      <p>Voir aussi la <a href={`/${p.slug}/support/`}>page de support</a>.</p>
+    </div>
+  </article>
+</Base>

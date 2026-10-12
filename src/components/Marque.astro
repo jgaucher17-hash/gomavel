@@ -1,0 +1,10 @@
+---
+/** Le G noir et blanc : le logo du studio (sa réponse du 12/10, « on reste sur un G »). */
+import { G_CARRE } from '../data/marque.js';
+const { class: classe = '', titre } = Astro.props;
+---
+<svg class:list={['marque', classe]} viewBox="0 0 100 100" role={titre ? 'img' : undefined} aria-hidden={titre ? undefined : 'true'} focusable="false">
+  {titre && <title>{titre}</title>}
+  <rect width="100" height="100" fill="#000" />
+  <path d={G_CARRE} fill="#fff" />
+</svg>

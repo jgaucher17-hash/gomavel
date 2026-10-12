@@ -1,0 +1,120 @@
+---
+/**
+ * L'ACCUEIL — le studio d'abord, ses produits ensuite.
+ *
+ * Sa note du 12/10 : « trop poussé sur le gameplay » et « l'entreprise fait aussi les
+ * applis mobiles hors jeux ». L'accueil ne raconte donc aucun jeu : il dit ce qu'est le
+ * studio, accroche chaque produit dans son cadre (un cartel, comme dans une galerie), et
+ * laisse la page du produit parler de lui.
+ */
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { PRODUITS, numero, plateformes } from '../data/produits.js';
+import { SITE } from '../data/site.js';
+
+const [debut, fin] = (() => {
+  const i = SITE.accroche.indexOf(',');
+  return i > 0 ? [SITE.accroche.slice(0, i + 1), SITE.accroche.slice(i + 1).trim()] : [SITE.accroche, ''];
+})();
+
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Gomavel',
+  url: SITE.url + '/',
+  logo: SITE.url + '/icon-512.png',
+  description: SITE.description,
+  foundingDate: String(SITE.fondation),
+  slogan: SITE.accroche,
+};
+---
+<Base titre={`Gomavel — ${SITE.accroche}`} classe="accueil" jsonld={jsonld} attendu="catalogue">
+  <section class="ouverture conteneur" aria-labelledby="t-accroche">
+    <p class="label">Applications et jeux mobiles</p>
+    <h1 id="t-accroche" class="accroche">
+      <span class="ligne"><span>{debut}</span></span>
+      {fin && <span class="ligne"><span>{fin}</span></span>}
+    </h1>
+    <div class="ouverture-bas">
+      <p class="presentation">Gomavel est un studio indépendant, en France. Il conçoit des applications et des jeux pour iPhone et Android.</p>
+      <nav aria-label="Le catalogue">
+        <ol class="index liste-nue">
+          {PRODUITS.map((p) => (
+            <li>
+              <a href={`#${p.slug}`}>
+                <span class="n">{numero(p.numero)}</span>
+                <span class="nom">{p.nom}</span>
+                <span class="meta">{p.type} · {p.statut.toLowerCase()}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <section id="catalogue" class="catalogue" aria-label="Catalogue">
+    {PRODUITS.map((p) => (
+      <article class="produit" id={p.slug} aria-labelledby={`t-${p.slug}`}>
+        {/* Le cadre est un lien pour la souris et le doigt ; le lecteur d'écran et le
+            clavier passent par le lien du cartel, sans doublon. */}
+        <a class="fenetre" href={`/${p.slug}/`} tabindex="-1" aria-hidden="true">
+          <div class="fenetre-vue">
+            <Picture
+              src={p.heros.image}
+              alt=""
+              widths={[640, 960, 1280, 1920, 2560]}
+              sizes="100vw"
+              formats={['avif', 'webp']}
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        </a>
+        <div class="conteneur cartel" data-apparait>
+          <div>
+            <p class="label">{numero(p.numero)} · {p.annee}</p>
+            <h2 id={`t-${p.slug}`}>{p.nom}</h2>
+          </div>
+          <div>
+            <p class="resume">{p.resume}</p>
+            <p class="meta">{p.type} · {plateformes(p)} · {p.statut}</p>
+          </div>
+          <a class="fleche" href={`/${p.slug}/`}>Découvrir <span class="visuellement-cache">{p.nom}</span><span aria-hidden="true">→</span></a>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <section id="studio" class="bande studio" aria-labelledby="t-studio">
+    <div class="conteneur">
+      <div class="studio-grille">
+        <div>
+          <p class="label doux">Le studio</p>
+          <h2 id="t-studio">Peu de produits, chacun fini avant de sortir.</h2>
+        </div>
+        <div class="texte">
+          <p>Gomavel est un studio indépendant installé en France. Il conçoit et développe ses applications de bout en bout, sans éditeur ni investisseur&nbsp;: un produit sort quand il est prêt, pas avant.</p>
+          <p>Des jeux aujourd’hui, des outils pour apprendre demain&nbsp;: tout ce que fait le studio tient dans une main.</p>
+        </div>
+      </div>
+      <div class="principes" data-apparait>
+        <div>
+          <h3>Petit écran</h3>
+          <p>Tout est pensé pour le téléphone d’abord&nbsp;: d’une main, en quelques secondes, sans attente.</p>
+        </div>
+        <div>
+          <h3>Grand soin</h3>
+          <p>Chaque écran est essayé sur de vrais téléphones, image par image, avant de sortir.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {SITE.emails.studio && (
+    <section id="contact" class="contact conteneur" aria-labelledby="t-contact">
+      <p class="label doux" id="t-contact">Contact</p>
+      <a class="adresse lien" href={`mailto:${SITE.emails.studio}`}>{SITE.emails.studio}</a>
+    </section>
+  )}
+</Base>

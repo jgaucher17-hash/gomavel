@@ -1,0 +1,5 @@
+# Fermé tant que le site vit sur son adresse provisoire (gomavel.pages.dev).
+# À l'ouverture sur gomavel.com : « Allow: / » et la ligne Sitemap, avec
+# `indexable: true` dans src/data/site.js.
+User-agent: *
+Disallow: /

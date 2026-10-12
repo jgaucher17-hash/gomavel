@@ -1,0 +1,392 @@
+/**
+ * GOMAVEL — LA FEUILLE DU SITE.
+ *
+ * La règle qui tient tout (planche du 12/10/2026, sa réponse « oui ») : LE NOIR ET
+ * BLANC, C'EST LE STUDIO ; LA COULEUR, CE SONT LES PRODUITS. Aucune couleur n'est
+ * définie ici en dehors des noirs, des blancs et des gris : la couleur n'entre sur une
+ * page que par les images d'un produit, posées dans un cadre.
+ *
+ * Une seule famille, Archivo (variable, licence SIL OFL), hébergée par le site : sa
+ * largeur variable fait la voix de la marque. Expanded (125 %) pour le logo et les
+ * petites capitales, normale pour le texte, avec quelques graisses seulement.
+ *
+ * Pas de thème sombre automatique, et c'est voulu : l'identité EST un blanc dominant
+ * avec des bandes noires ; l'inverser selon le téléphone la ferait disparaître.
+ */
+
+:root {
+  color-scheme: light;
+  --blanc: #ffffff;
+  --noir: #000000;
+  --gris: #646464;        /* texte secondaire : 5,9:1 sur blanc (AA) */
+  --gris-noir: #a3a3a3;   /* texte secondaire sur noir : 8,3:1 */
+  --filet: #e2e2e2;
+  --filet-noir: #2a2a2a;
+  --voile: #f4f4f4;
+
+  --f: 'Archivo Variable', 'Helvetica Neue', Arial, sans-serif;
+  --gout: clamp(16px, 4.4vw, 56px);
+  --large: 1360px;
+  --ease: cubic-bezier(.2, .7, 0, 1);
+  --mat: 12px;            /* le passe-partout blanc entre le filet et l'image */
+  --entete: 76px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  background: var(--blanc);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 24px;
+}
+body {
+  margin: 0;
+  background: var(--blanc);
+  color: var(--noir);
+  font: 400 17px/1.6 var(--f);
+  font-stretch: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+@media (min-width: 900px) { body { font-size: 18px; } }
+img, svg, video, picture { display: block; max-width: 100%; }
+img { height: auto; }
+h1, h2, h3, p, figure, ul, ol, dl, dd { margin: 0; }
+ul[role='list'], .liste-nue { list-style: none; padding: 0; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: .22em; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+::selection { background: var(--noir); color: var(--blanc); }
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+
+.conteneur { width: 100%; max-width: var(--large); margin-inline: auto; padding-inline: var(--gout); }
+.visuellement-cache {
+  position: absolute !important; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+/* Le lien d'évitement : invisible jusqu'au premier Tab. */
+.evitement {
+  position: absolute; left: var(--gout); top: 12px; z-index: 50;
+  background: var(--noir); color: var(--blanc); padding: 10px 14px;
+  font-weight: 600; font-size: 15px; text-decoration: none;
+  transform: translateY(-160%); transition: transform .25s var(--ease);
+}
+.evitement:focus { transform: none; }
+
+/* ─── La voix de la marque : petites capitales larges ─────────────────────────── */
+.label {
+  font-weight: 620; font-size: 12px; line-height: 1.25;
+  font-stretch: 125%; letter-spacing: .12em; text-transform: uppercase;
+}
+.doux { color: var(--gris); }
+
+/* ─── Liens : le trait se retire vers la droite et revient par la gauche ──────── */
+.lien {
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat;
+  padding-bottom: .12em;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .lien:hover { animation: trait .7s var(--ease); }
+}
+@keyframes trait {
+  0% { background-size: 100% 1px; background-position: 100% 100%; }
+  45% { background-size: 0 1px; background-position: 100% 100%; }
+  45.1% { background-size: 0 1px; background-position: 0 100%; }
+  100% { background-size: 100% 1px; background-position: 0 100%; }
+}
+.fleche { display: inline-flex; align-items: center; gap: .55em; font-weight: 600; text-decoration: none; }
+.fleche span[aria-hidden] { display: inline-block; transition: transform .45s var(--ease); }
+.fleche:hover span[aria-hidden], .fenetre:hover ~ .cartel .fleche span[aria-hidden] { transform: translateX(5px); }
+
+/* ─── La marque ──────────────────────────────────────────────────────────────── */
+.marque { width: 30px; height: 30px; flex: none; }
+.mot { height: 12.6px; width: auto; flex: none; overflow: visible; }
+.mot .lettre, .marque { transform-box: fill-box; transform-origin: 50% 100%; }
+.logo {
+  display: inline-flex; align-items: center; gap: 12px;
+  text-decoration: none; color: var(--noir);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* À l'arrivée sur l'accueil, les lettres retombent une à une : en CSS, pour qu'aucune
+   image ne s'affiche avant l'animation puis ne disparaisse. Une seule fois par chargement. */
+@media (prefers-reduced-motion: no-preference) {
+  .accueil .entete .marque { animation: bond .8s var(--ease) both; }
+  .accueil .entete .mot .lettre { animation: chute .72s cubic-bezier(.3, .7, .35, 1) both; }
+  .accueil .entete .mot .lettre:nth-child(1) { animation-delay: .10s; }
+  .accueil .entete .mot .lettre:nth-child(2) { animation-delay: .15s; }
+  .accueil .entete .mot .lettre:nth-child(3) { animation-delay: .20s; }
+  .accueil .entete .mot .lettre:nth-child(4) { animation-delay: .25s; }
+  .accueil .entete .mot .lettre:nth-child(5) { animation-delay: .30s; }
+  .accueil .entete .mot .lettre:nth-child(6) { animation-delay: .35s; }
+  .accueil .entete .mot .lettre:nth-child(7) { animation-delay: .40s; }
+}
+@keyframes chute {
+  0% { transform: translateY(-120%); opacity: 0; }
+  60% { transform: translateY(0) scale(1.08, .86); opacity: 1; }
+  80% { transform: translateY(-10%) scale(.98, 1.03); }
+  100% { transform: none; opacity: 1; }
+}
+@keyframes bond {
+  0% { transform: scale(1, 1); }
+  18% { transform: scale(1.1, .86); }
+  52% { transform: translateY(-34%) scale(.94, 1.08); }
+  82% { transform: translateY(0) scale(1.08, .9); }
+  100% { transform: none; }
+}
+
+/* ─── En-tête ────────────────────────────────────────────────────────────────── */
+.entete { position: relative; z-index: 10; background: var(--blanc); }
+.entete-in { min-height: var(--entete); display: flex; align-items: center; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; padding-block: 18px; }
+.entete nav ul { display: flex; gap: 6px 30px; flex-wrap: wrap; }
+.entete nav a { font-size: 15px; font-weight: 500; text-decoration: none; padding-block: 4px; }
+.entete nav a[aria-current='page'] { background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat; }
+@media (max-width: 520px) {
+  .entete nav ul { gap: 4px 20px; }
+  .entete nav a { font-size: 14px; }
+  .marque { width: 28px; height: 28px; }
+  .mot { height: 11.6px; }
+}
+
+/* ─── Accueil : l'accroche ───────────────────────────────────────────────────── */
+.ouverture { padding-block: clamp(48px, 9vw, 132px) clamp(56px, 8vw, 112px); }
+.ouverture .label { color: var(--gris); }
+.accroche {
+  margin-top: clamp(20px, 3vw, 36px);
+  font-weight: 760; font-stretch: 100%;
+  font-size: clamp(50px, 11.6vw, 172px); line-height: .9; letter-spacing: -.048em;
+}
+.accroche .ligne { display: block; overflow: hidden; padding-bottom: .06em; margin-bottom: -.06em; }
+.accroche .ligne > span { display: block; }
+@media (prefers-reduced-motion: no-preference) {
+  .accroche .ligne > span { animation: monte 1s var(--ease) both; }
+  .accroche .ligne:nth-child(2) > span { animation-delay: .12s; }
+}
+@keyframes monte { from { transform: translateY(105%); } to { transform: none; } }
+.ouverture-bas {
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 32px clamp(32px, 6vw, 96px);
+  margin-top: clamp(40px, 6vw, 80px); align-items: end;
+}
+.ouverture .presentation { font-size: clamp(19px, 1.7vw, 24px); line-height: 1.45; max-width: 30ch; }
+.index { border-top: 1px solid var(--noir); }
+.index li { border-bottom: 1px solid var(--filet); }
+.index a { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 12px; align-items: baseline; padding: 14px 0; text-decoration: none; }
+.index .n { font-weight: 620; font-size: 12px; font-stretch: 125%; letter-spacing: .08em; }
+.index .nom { font-weight: 650; font-size: 17px; }
+.index .meta { color: var(--gris); font-size: 14px; }
+.index a:hover .nom { text-decoration: underline; text-decoration-thickness: 1px; }
+@media (max-width: 760px) {
+  .ouverture-bas { grid-template-columns: minmax(0, 1fr); }
+  .index .meta { grid-column: 2; }
+}
+
+/* ─── La fenêtre : un produit dans son cadre ─────────────────────────────────── */
+/* Au repos : un filet noir, un passe-partout blanc, l'image dedans — accroché dans la
+   largeur du texte. Là où le navigateur sait lier une animation au défilement, le cadre
+   S'OUVRE quand on descend : les côtés de l'image s'écartent jusqu'aux bords de l'écran
+   et le filet s'efface. Un navigateur qui ne sait pas (ou « moins de mouvement ») garde
+   le cadre fermé : c'est l'état de l'identité, pas un repli. */
+.catalogue { padding-bottom: clamp(64px, 10vw, 140px); }
+.produit + .produit { margin-top: clamp(72px, 10vw, 140px); }
+.fenetre {
+  --ecart: calc(var(--gout) + var(--mat) + 1px);
+  display: block; position: relative; margin-block: calc(var(--mat) + 1px);
+  color: var(--noir); text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.fenetre::after {
+  content: ''; position: absolute; pointer-events: none;
+  top: calc(-1 * (var(--mat) + 1px)); bottom: calc(-1 * (var(--mat) + 1px));
+  left: var(--gout); right: var(--gout);
+  border: 1px solid var(--noir);
+}
+.fenetre-vue {
+  overflow: hidden; aspect-ratio: 2560 / 1184; max-height: 86vh;
+  clip-path: inset(0 var(--ecart));
+}
+.fenetre-vue img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.1s var(--ease); }
+@media (hover: hover) { .fenetre:hover .fenetre-vue img { transform: scale(1.025); } }
+@media (min-width: 1468px) {
+  /* Au-delà de la largeur du texte, le cadre reste aligné sur la colonne. */
+  .fenetre { --ecart: calc((100vw - var(--large)) / 2 + var(--gout) + var(--mat) + 1px); }
+  .fenetre::after { left: calc((100vw - var(--large)) / 2 + var(--gout)); right: calc((100vw - var(--large)) / 2 + var(--gout)); }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .fenetre-vue { animation: ouvre linear both; animation-timeline: view(); animation-range: entry 35% cover 52%; }
+    .fenetre::after { animation: efface linear both; animation-timeline: view(); animation-range: entry 35% cover 52%; }
+  }
+}
+@keyframes ouvre { from { clip-path: inset(0 var(--ecart)); } to { clip-path: inset(0 0); } }
+@keyframes efface {
+  from { left: var(--gout); right: var(--gout); opacity: 1; }
+  to { left: calc(-1 * (var(--mat) + 1px)); right: calc(-1 * (var(--mat) + 1px)); opacity: 0; }
+}
+
+/* Le cartel : ce qu'une galerie colle à côté d'une œuvre. */
+.cartel {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto; gap: 16px clamp(24px, 4vw, 64px);
+  align-items: start; margin-top: 28px;
+}
+.cartel h2 { font-weight: 720; font-size: clamp(26px, 3vw, 40px); line-height: 1; letter-spacing: -.03em; margin-top: 10px; }
+.cartel .resume { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.45; }
+.cartel .meta { color: var(--gris); font-size: 14px; margin-top: 8px; }
+@media (max-width: 860px) { .cartel { grid-template-columns: minmax(0, 1fr); } }
+
+/* ─── Bande noire ────────────────────────────────────────────────────────────── */
+.bande { background: var(--noir); color: var(--blanc); }
+.bande .doux, .bande .label.doux { color: var(--gris-noir); }
+.bande ::selection { background: var(--blanc); color: var(--noir); }
+
+/* ─── Le studio ──────────────────────────────────────────────────────────────── */
+.studio { padding-block: clamp(80px, 11vw, 168px); }
+.studio-grille { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 40px clamp(40px, 7vw, 120px); }
+.studio h2 { font-weight: 740; font-size: clamp(36px, 5.4vw, 76px); line-height: .98; letter-spacing: -.04em; margin-top: 18px; max-width: 12ch; }
+.studio .texte { display: grid; gap: 22px; font-size: clamp(18px, 1.5vw, 21px); line-height: 1.55; color: #e9e9e9; max-width: 44ch; padding-top: 8px; }
+.principes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(24px, 4vw, 56px); margin-top: clamp(56px, 8vw, 104px); border-top: 1px solid var(--filet-noir); }
+.principes > div { padding-top: 22px; }
+.principes h3 { font-weight: 620; font-size: 13px; font-stretch: 125%; letter-spacing: .12em; text-transform: uppercase; }
+.principes p { margin-top: 10px; color: #cfcfcf; font-size: 17px; max-width: 34ch; }
+@media (max-width: 860px) {
+  .studio-grille { grid-template-columns: minmax(0, 1fr); }
+  .principes { grid-template-columns: minmax(0, 1fr); }
+  .principes > div + div { margin-top: 18px; border-top: 1px solid var(--filet-noir); }
+}
+
+/* ─── Contact ────────────────────────────────────────────────────────────────── */
+.contact { padding-block: clamp(72px, 10vw, 140px); }
+.contact .adresse { display: inline-block; margin-top: 18px; font-weight: 720; font-size: clamp(26px, 5vw, 64px); letter-spacing: -.035em; line-height: 1.05; overflow-wrap: anywhere; }
+
+/* ─── Pied de page ───────────────────────────────────────────────────────────── */
+.pied { border-top: 1px solid var(--noir); padding-block: 40px 48px; font-size: 15px; }
+.pied-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 40px; }
+.pied-marque { display: grid; gap: 14px; align-content: start; }
+.pied-marque .marque { width: 36px; height: 36px; }
+.pied nav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.pied nav .label { color: var(--gris); margin-bottom: 12px; }
+.pied nav li + li { margin-top: 6px; }
+.pied nav a { text-decoration: none; }
+.pied nav a:hover { text-decoration: underline; }
+.pied-bas { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 20px; border-top: 1px solid var(--filet); color: var(--gris); font-size: 13px; }
+@media (max-width: 760px) {
+  .pied-in { grid-template-columns: minmax(0, 1fr); }
+  .pied nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ─── Page d'un produit ──────────────────────────────────────────────────────── */
+.heros-image { background: var(--noir); }
+.heros-image img { width: 100%; aspect-ratio: 2560 / 1184; max-height: calc(100vh - var(--entete)); object-fit: cover; }
+.heros-bande { padding-block: clamp(28px, 4vw, 48px); }
+.heros-bande-in { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 48px; align-items: end; }
+.heros-bande h1 { max-width: 560px; }
+.heros-bande h1 img { width: 100%; }
+.heros-bande .meta { display: grid; gap: 6px; text-align: right; font-size: 15px; }
+.heros-bande .meta .label { color: var(--blanc); }
+@media (max-width: 760px) {
+  .heros-bande-in { grid-template-columns: minmax(0, 1fr); }
+  .heros-bande .meta { text-align: left; }
+}
+
+.intro { padding-block: clamp(64px, 9vw, 128px) clamp(40px, 6vw, 72px); }
+.intro p { font-weight: 540; font-size: clamp(26px, 3.5vw, 48px); line-height: 1.12; letter-spacing: -.028em; max-width: 26ch; }
+
+.points { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 clamp(24px, 4vw, 56px); border-top: 1px solid var(--noir); }
+.points > div { padding-top: 22px; min-width: 0; }
+.points h2 { font-weight: 620; font-size: 13px; font-stretch: 125%; letter-spacing: .12em; text-transform: uppercase; }
+.points p { margin-top: 10px; font-size: 17px; max-width: 32ch; }
+@media (max-width: 860px) {
+  .points { grid-template-columns: minmax(0, 1fr); }
+  .points > div + div { margin-top: 18px; border-top: 1px solid var(--filet); }
+}
+
+.galerie { padding-block: clamp(64px, 9vw, 128px) 0; }
+.galerie-tete { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+.galerie-tete p { color: var(--gris); font-size: 15px; }
+.defile {
+  display: grid; grid-auto-flow: column; grid-auto-columns: min(78vw, 640px); gap: clamp(16px, 2vw, 28px);
+  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory;
+  padding: 28px var(--gout) 18px; scroll-padding-inline: var(--gout);
+  scrollbar-width: thin; scrollbar-color: var(--noir) transparent;
+}
+.defile:focus-visible { outline-offset: -4px; }
+.defile figure { scroll-snap-align: start; }
+.cadre { border: 1px solid var(--noir); padding: var(--mat); background: var(--blanc); }
+.cadre img { width: 100%; aspect-ratio: 2560 / 1184; object-fit: cover; }
+.defile figcaption { margin-top: 12px; font-size: 14px; display: flex; gap: 12px; }
+.defile figcaption .label { color: var(--gris); font-size: 11px; padding-top: 2px; }
+@media (min-width: 1468px) { .defile { padding-inline: calc((100vw - var(--large)) / 2 + var(--gout)); scroll-padding-inline: calc((100vw - var(--large)) / 2 + var(--gout)); } }
+
+.personnages { padding-block: clamp(72px, 10vw, 140px); }
+.personnages-tete { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px 48px; align-items: end; }
+.personnages h2 { font-weight: 740; font-size: clamp(32px, 4.6vw, 64px); letter-spacing: -.04em; line-height: 1; }
+.personnages-tete p { color: var(--gris); font-size: 17px; }
+.troupe { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 8px; margin-top: clamp(32px, 5vw, 56px); border-bottom: 1px solid var(--noir); }
+.troupe figure { text-align: center; padding-bottom: 14px; }
+.troupe img { width: 100%; aspect-ratio: 600 / 588; object-fit: contain; transform-origin: 50% 100%; }
+.troupe figcaption { font-size: 13px; font-weight: 500; margin-top: 2px; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .troupe figure:hover img { animation: bond .7s var(--ease); }
+}
+@media (max-width: 860px) {
+  .personnages-tete { grid-template-columns: minmax(0, 1fr); }
+  .troupe { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+.sortie { padding-block: clamp(72px, 10vw, 140px); }
+.sortie p.grand { font-weight: 740; font-size: clamp(36px, 6vw, 88px); line-height: .98; letter-spacing: -.045em; max-width: 13ch; margin-top: 18px; }
+.sortie .boutons { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 36px; }
+.sortie .bouton { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--blanc); padding: 14px 18px; font-weight: 600; text-decoration: none; transition: background .25s var(--ease), color .25s var(--ease); }
+.sortie .bouton:hover { background: var(--blanc); color: var(--noir); }
+.annexes { padding-block: 28px; border-bottom: 1px solid var(--filet); }
+.annexes ul { display: flex; gap: 8px 28px; flex-wrap: wrap; font-size: 15px; }
+
+/* ─── Pages de texte (légal, confidentialité, support) ───────────────────────── */
+.texte-page { padding-block: clamp(48px, 8vw, 112px) clamp(72px, 10vw, 140px); }
+.texte-page .tete { max-width: 980px; }
+.texte-page .tete .label { color: var(--gris); }
+.texte-page h1 { font-weight: 740; font-size: clamp(38px, 6vw, 80px); line-height: .98; letter-spacing: -.045em; margin-top: 16px; }
+.texte-page .maj { color: var(--gris); font-size: 15px; margin-top: 18px; }
+.prose { max-width: 68ch; margin-top: clamp(40px, 6vw, 72px); }
+.prose > * + * { margin-top: 1em; }
+.prose h2 { font-weight: 700; font-size: 22px; letter-spacing: -.015em; line-height: 1.25; margin-top: 2.2em; padding-top: 18px; border-top: 1px solid var(--filet); }
+.prose ul { padding-left: 1.1em; }
+.prose li + li { margin-top: .45em; }
+.prose a { text-decoration: underline; }
+.prose strong { font-weight: 650; }
+.fiche { border-top: 1px solid var(--noir); margin-top: 1.4em; }
+.fiche div { display: grid; grid-template-columns: minmax(0, 220px) minmax(0, 1fr); gap: 8px 24px; padding: 13px 0; border-bottom: 1px solid var(--filet); }
+.fiche dt { color: var(--gris); font-size: 15px; }
+.fiche dd { overflow-wrap: anywhere; }
+.fiche .vide { color: var(--gris); font-style: italic; }
+@media (max-width: 600px) { .fiche div { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+.encart { border-left: 2px solid var(--noir); padding: 14px 18px; background: var(--voile); }
+
+/* ─── 404 ────────────────────────────────────────────────────────────────────── */
+.trou { padding-block: clamp(48px, 8vw, 104px) clamp(72px, 10vw, 140px); }
+.trou h1 { font-weight: 760; font-size: clamp(42px, 8vw, 116px); line-height: .94; letter-spacing: -.05em; margin-top: 16px; max-width: 12ch; }
+.trou .retour { margin-top: 28px; font-size: 18px; }
+.jeu404 { margin-top: clamp(40px, 6vw, 72px); }
+.jeu404 .cadre { padding: var(--mat); position: relative; cursor: pointer; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+.jeu404 canvas { display: block; width: 100%; height: clamp(150px, 22vw, 220px); }
+.jeu404-bas { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-top: 12px; font-size: 14px; color: var(--gris); }
+.jeu404-bas output { font-variant-numeric: tabular-nums; color: var(--noir); }
+
+/* ─── Apparitions ─────────────────────────────────────────────────────────────── */
+/* Posée par le script SEULEMENT sur ce qui est encore sous l'écran au chargement :
+   la page est complète sans script, et rien de visible ne disparaît puis revient. */
+.attend { opacity: 0; transform: translateY(18px); }
+.apparu { transition: opacity .9s var(--ease), transform .9s var(--ease); }
+
+/* ─── Transitions entre pages (navigateurs qui savent le faire) ─────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .32s; }
+  ::view-transition-group(produit) { animation-duration: .7s; animation-timing-function: cubic-bezier(.2, .7, 0, 1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+}

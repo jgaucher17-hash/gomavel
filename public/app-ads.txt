@@ -1,0 +1,28 @@
+# app-ads.txt — Shuriken Storm
+#
+# A REMPLIR DEPUIS LA CONSOLE ADMOB LE 22/09/2026.
+#
+# Ou trouver la ligne exacte : AdMob > Applications > Shuriken Storm >
+# app-ads.txt > "Verifier maintenant" / "Configurer". Google donne une ligne de
+# la forme :
+#
+#     google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+#
+# On la colle ici, telle quelle, SANS le dieze. Rien d'autre a ecrire.
+#
+# CE QUI COMPTE, ET QUI SE RATE FACILEMENT :
+#   1. Le fichier doit repondre a la RACINE EXACTE du domaine declare dans la
+#      fiche du store, en text/plain :  https://<domaine>/app-ads.txt
+#      Ce fichier est place dans public/, donc Vite le copie a la racine de dist/
+#      et Cloudflare Pages le sert bien a /app-ads.txt. Verifie apres deploiement.
+#   2. Le domaine declare dans la fiche store DOIT etre celui-la, sinon Google
+#      cherche le fichier ailleurs et ne le trouve jamais.
+#   3. L'exploration par Google prend de quelques heures a quelques jours. Ce
+#      n'est pas instantane : le faire le jour meme du lancement, c'est perdre
+#      des revenus pendant l'attente. A poser des que le compte AdMob existe.
+#
+# Tant que ce fichier ne contient que des commentaires, il est syntaxiquement
+# valide mais ne declare AUCUN vendeur autorise : AdMob affichera "app-ads.txt
+# non configure". C'est normal et attendu avant le 22/09.
+
+google.com, pub-1902187062547806, DIRECT, f08c47fec0942fa0

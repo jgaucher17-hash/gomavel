@@ -1,0 +1,18 @@
+{
+  "name": "gomavel",
+  "private": true,
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev --host",
+    "build": "astro build",
+    "preview": "astro preview --host",
+    "deploy": "astro build && npx --yes wrangler@latest pages deploy dist --project-name=gomavel --branch=main --commit-dirty=true"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/archivo": "^5.3.0",
+    "astro": "^7.3.8",
+    "sharp": "^0.35.5"
+  }
+}

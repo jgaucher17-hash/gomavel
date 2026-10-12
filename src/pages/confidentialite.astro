@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import { PRODUITS } from '../data/produits.js';
+---
+<Base titre="Confidentialité — Gomavel" description="Ce site ne dépose aucun cookie et ne contient aucun traceur.">
+  <article class="texte-page conteneur">
+    <header class="tete">
+      <p class="label">Informations</p>
+      <h1>Confidentialité du site</h1>
+      <p class="maj">Dernière mise à jour : 12 octobre 2026</p>
+    </header>
+    <div class="prose">
+      <p>Ce site ne dépose <strong>aucun cookie</strong> et n’utilise <strong>aucun outil de mesure d’audience ni aucun traceur</strong>. Il n’a pas de formulaire&nbsp;: il ne vous demande rien. C’est pour cela qu’aucun bandeau de consentement ne s’affiche.</p>
+
+      <h2>Hébergement</h2>
+      <p>Le site est servi par Cloudflare. Comme tout hébergeur, Cloudflare traite techniquement l’adresse IP des visiteurs pour acheminer les pages et protéger le site contre les attaques. Ce traitement relève de la <a href="https://www.cloudflare.com/fr-fr/privacypolicy/" rel="noopener">politique de confidentialité de Cloudflare</a>. Le studio ne consulte que des statistiques globales (nombre de visites, pays) qui n’identifient personne.</p>
+
+      <h2>Si vous écrivez au studio</h2>
+      <p>Votre message et votre adresse e-mail servent uniquement à vous répondre. Ils ne sont ni revendus, ni partagés. Vous pouvez demander à tout moment l’accès à ces échanges ou leur effacement.</p>
+
+      <h2>Les applications et les jeux</h2>
+      <p>Chaque produit du studio a sa propre politique de confidentialité&nbsp;:</p>
+      <ul>
+        {PRODUITS.map((p) => <li><a href={`/${p.slug}/confidentialite/`}>{p.nom}</a></li>)}
+      </ul>
+
+      <h2>Réclamation</h2>
+      <p>Vous pouvez adresser une réclamation à la <a href="https://www.cnil.fr/fr/plaintes" rel="noopener">CNIL</a>.</p>
+    </div>
+  </article>
+</Base>

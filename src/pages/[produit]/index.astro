@@ -1,0 +1,138 @@
+---
+/**
+ * LA PAGE D'UN PRODUIT — un « onglet » par produit, tous construits sur ce gabarit à
+ * partir de leur fiche (`src/produits/<slug>.js`).
+ *
+ * Le cadre de l'accueil s'est ouvert : l'image en grand, le vrai titre du produit dans
+ * ses propres couleurs sur une bande noire, puis le produit en peu de mots. Le ton y est
+ * celui du produit (tu), le studio reste sobre ailleurs (sa réponse « mixte », 12/10).
+ */
+import { Image, Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import { PRODUITS, numero, plateformes } from '../../data/produits.js';
+import { SITE } from '../../data/site.js';
+
+export function getStaticPaths() {
+  return PRODUITS.map((p) => ({ params: { produit: p.slug }, props: { p } }));
+}
+const { p } = Astro.props;
+const disponible = Boolean(p.liens.appStore || p.liens.googlePlay);
+
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': p.categorie === 'jeu' ? ['VideoGame', 'MobileApplication'] : 'MobileApplication',
+  name: p.nom,
+  description: p.description,
+  url: `${SITE.url}/${p.slug}/`,
+  image: `${SITE.url}/og/${p.slug}.png`,
+  operatingSystem: 'iOS, Android',
+  applicationCategory: p.categorie === 'jeu' ? 'GameApplication' : 'MobileApplication',
+  ...(p.categorie === 'jeu' ? { gamePlatform: p.plateformes } : {}),
+  inLanguage: 'fr',
+  publisher: { '@type': 'Organization', name: 'Gomavel', url: SITE.url + '/' },
+};
+---
+<Base titre={`${p.nom} — Gomavel`} description={p.description} image={`/og/${p.slug}.png`} jsonld={jsonld} attendu="heros">
+  <section id="heros" class="heros" aria-labelledby="t-heros">
+    <div class="heros-image">
+      <Picture
+        src={p.heros.image}
+        alt={p.heros.alt}
+        widths={[640, 960, 1280, 1920, 2560]}
+        sizes="100vw"
+        formats={['avif', 'webp']}
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+    <div class="bande heros-bande">
+      <div class="conteneur heros-bande-in">
+        <h1 id="t-heros">
+          <Image src={p.titre.image} alt={p.titre.alt} widths={[560, 1120]} sizes="(max-width: 640px) 92vw, 560px" format="webp" loading="eager" />
+        </h1>
+        <div class="meta">
+          <p class="label">{numero(p.numero)} · {p.annee}</p>
+          <p class="doux">{p.type} · {plateformes(p)}</p>
+          <p>{p.statut}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="intro conteneur" aria-label="Le jeu en quelques mots">
+    <p>{p.intro}</p>
+  </section>
+
+  <section class="conteneur" aria-label="En bref">
+    <div class="points">
+      {p.points.map((pt) => (
+        <div data-apparait>
+          <h2>{pt.titre}</h2>
+          <p>{pt.texte}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {p.galerie?.length > 0 && (
+    <section class="galerie" aria-labelledby="t-galerie">
+      <div class="conteneur galerie-tete">
+        <h2 id="t-galerie" class="label">Les décors</h2>
+        <p>Images tirées du jeu, sans retouche.</p>
+      </div>
+      <div class="defile" tabindex="0" role="region" aria-label="Images du jeu, défilement horizontal">
+        {p.galerie.map((g, i) => (
+          <figure>
+            <div class="cadre">
+              <Picture src={g.image} alt={g.alt} widths={[480, 720, 960, 1280]} sizes="(max-width: 820px) 78vw, 640px" formats={['avif', 'webp']} loading="lazy" decoding="async" />
+            </div>
+            <figcaption><span class="label">{String(i + 1).padStart(2, '0')}</span><span>{g.legende}</span></figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {p.personnages && (
+    <section class="personnages conteneur" aria-labelledby="t-personnages">
+      <div class="personnages-tete">
+        <h2 id="t-personnages">{p.personnages.titre}</h2>
+        <p>{p.personnages.texte}</p>
+      </div>
+      <ul class="troupe liste-nue" data-apparait>
+        {p.personnages.liste.map((n) => (
+          <li>
+            <figure>
+              <Image src={n.image} alt="" widths={[180, 300]} sizes="(max-width: 860px) 24vw, 160px" format="webp" loading="lazy" decoding="async" />
+              <figcaption>{n.nom}</figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  <section class="bande sortie" aria-labelledby="t-sortie">
+    <div class="conteneur">
+      <p class="label doux">Sortie</p>
+      {disponible ? (
+        <>
+          <p class="grand" id="t-sortie">Sur iPhone et Android.</p>
+          <div class="boutons">
+            {p.liens.appStore && <a class="bouton" href={p.liens.appStore} rel="noopener">App Store <span aria-hidden="true">→</span></a>}
+            {p.liens.googlePlay && <a class="bouton" href={p.liens.googlePlay} rel="noopener">Google Play <span aria-hidden="true">→</span></a>}
+          </div>
+        </>
+      ) : (
+        <p class="grand" id="t-sortie">Bientôt sur iPhone et Android.</p>
+      )}
+    </div>
+  </section>
+
+  <nav class="annexes conteneur" aria-label={`Informations sur ${p.nom}`}>
+    <ul class="liste-nue">
+      <li><a class="lien" href={`/${p.slug}/confidentialite/`}>Confidentialité de {p.nom}</a></li>
+      <li><a class="lien" href={`/${p.slug}/support/`}>Support</a></li>
+    </ul>
+  </nav>
+</Base>

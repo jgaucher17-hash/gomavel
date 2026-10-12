@@ -1,0 +1,8 @@
+---
+/** GOMAVEL en tracés, une lettre par groupe (elles sautent une à une). */
+import { MOT, MOT_LARGEUR, MOT_HAUTEUR } from '../data/marque.js';
+const { class: classe = '' } = Astro.props;
+---
+<svg class:list={['mot', classe]} viewBox={`0 0 ${MOT_LARGEUR} ${MOT_HAUTEUR}`} aria-hidden="true" focusable="false" fill="currentColor">
+  {MOT.map((d) => <g class="lettre"><path d={d} /></g>)}
+</svg>
