@@ -4,26 +4,24 @@
  *
  * Sa demande du 12/10 au soir : « pas de capture d'écran du jeu dans l'accueil, que des
  * petits skins ou éléments du jeu détourés » et « quand on arrive sur le site on ne doit
- * pas voir Shuriken Storm direct, on doit cliquer sur son onglet ». Aucun produit n'est
- * donc nommé ni montré ici : on y entre par l'onglet du menu. Les ninjas qui courent sur
- * le filet noir sont un décor (alt vide), pas une vitrine.
+ * pas voir Shuriken Storm direct, on doit cliquer sur son onglet ».
+ *
+ * Puis, le même soir : « trop de texte inutile […] comble pas pour rien mettre. Trouve de
+ * la vraie matière […] et si tu sais pas, tu mets rien, ça arrivera au fur et à mesure,
+ * avec les autres jeux ». Sont partis : « Applications et jeux mobiles », la phrase de
+ * présentation, toute la bande « Le studio » (« Peu de produits… », ses deux paragraphes,
+ * « Petit écran » et « Les chances affichées ») et le renvoi vers les nouveautés (le menu
+ * y mène). Reste l'accroche et les ninjas qui courent : ce qui s'ajoutera ici, ce sont
+ * les prochains produits, pas des phrases.
  */
-import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
+import Piste from '../components/Piste.astro';
 import { SITE } from '../data/site.js';
-import kage from '../assets/produits/shuriken-storm/ninja-kage.png';
-import kurenai from '../assets/produits/shuriken-storm/ninja-kurenai.png';
-import ronin from '../assets/produits/shuriken-storm/ninja-ronin.png';
-import raijin from '../assets/produits/shuriken-storm/ninja-raijin.png';
-import tengu from '../assets/produits/shuriken-storm/ninja-tengu.png';
-import kagerou from '../assets/produits/shuriken-storm/ninja-kagerou.png';
 
-const decor = [kage, kurenai, ronin, raijin, tengu, kagerou];
-
-const [debut, fin] = (() => {
-  const i = SITE.accroche.indexOf(',');
-  return i > 0 ? [SITE.accroche.slice(0, i + 1), SITE.accroche.slice(i + 1).trim()] : [SITE.accroche, ''];
-})();
+/* L'accroche sur deux lignes, coupée avant son dernier mot : « Un autre / level. » —
+   le mot qui rime avec GomaVEL tombe seul, en bas, au-dessus des ninjas. */
+const coupe = SITE.accroche.lastIndexOf(' ');
+const lignes = coupe > 0 ? [SITE.accroche.slice(0, coupe), SITE.accroche.slice(coupe + 1)] : [SITE.accroche];
 
 const jsonld = {
   '@context': 'https://schema.org',
@@ -37,59 +35,16 @@ const jsonld = {
 };
 ---
 <Base titre={`Gomavel — ${SITE.accroche}`} classe="accueil" jsonld={jsonld}>
-  <section class="ouverture conteneur" aria-labelledby="t-accroche">
-    <p class="label">Applications et jeux mobiles</p>
-    <h1 id="t-accroche" class="accroche">
-      <span class="ligne"><span>{debut}</span></span>
-      {fin && <span class="ligne"><span>{fin}</span></span>}
-    </h1>
-    <div class="ouverture-bas">
-      <p class="presentation">Gomavel est un studio indépendant, en France. Il conçoit des applications et des jeux pour iPhone et Android.</p>
-      <div class="course" aria-hidden="true">
-        {decor.map((img) => (
-          <Image src={img} alt="" widths={[120, 200]} sizes="(max-width: 760px) 15vw, 100px" format="webp" loading="eager" />
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section id="studio" class="bande studio" aria-labelledby="t-studio">
-    <div class="conteneur">
-      <div class="studio-grille">
-        <div>
-          <p class="label doux">Le studio</p>
-          <h2 id="t-studio">Peu de produits, chacun fini avant de sortir.</h2>
-        </div>
-        <div class="texte">
-          <p>Gomavel est un studio indépendant installé en France. Il conçoit et développe ses applications de bout en bout, sans éditeur ni investisseur&nbsp;: un produit sort quand il est prêt, pas avant.</p>
-          <p>Des jeux aujourd’hui, des outils pour apprendre demain&nbsp;: tout ce que fait le studio tient dans une main.</p>
-        </div>
-      </div>
-      <div class="principes" data-apparait>
-        <div>
-          <h3>Petit écran</h3>
-          <p>Tout est pensé pour le téléphone d’abord&nbsp;: d’une main, en quelques secondes, sans attente.</p>
-        </div>
-        <!-- « Grand soin » remplacé (sa note du 12/10 : « un peu vague, pas très pertinent »)
-             par une promesse qu'on peut vérifier dans le jeu : les chances des caisses sont
-             affichées (A11) et celles de la roue le seront derrière son « i » (W1). -->
-        <div>
-          <h3>Les chances affichées</h3>
-          <p>Quand un jeu tire au sort, une caisse ou une roue, ses chances sont écrites avant le moindre achat.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- LE RENVOI VERS LES NOUVEAUTÉS, comme les blocs « Games » et « Careers » en bas de
-       supercell.com. Aucun produit nommé : l'accueil reste au studio seul (12/10). -->
-  <section class="renvoi conteneur" aria-labelledby="t-renvoi">
-    <div>
-      <p class="label">Nouveautés</p>
-      <h2 id="t-renvoi">Ce qui arrive bientôt dans nos jeux.</h2>
-    </div>
-    <a class="fleche lien-fort" href="/nouveautes/">Voir les nouveautés <span aria-hidden="true">→</span></a>
-  </section>
+  <!-- L'accroche en haut, la piste en bas : à elles deux, le premier écran (la page n'a
+       plus assez de texte pour que le pied de page tombe sous le pli tout seul). -->
+  <div class="scene">
+    <section class="ouverture conteneur" aria-labelledby="t-accroche">
+      <h1 id="t-accroche" class="accroche">
+        {lignes.map((l) => <span class="ligne"><span>{l}</span></span>)}
+      </h1>
+    </section>
+    <Piste />
+  </div>
 
   {SITE.emails.studio && (
     <section id="contact" class="contact conteneur" aria-labelledby="t-contact">

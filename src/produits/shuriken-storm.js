@@ -75,7 +75,6 @@ export default {
   ],
   personnages: {
     titre: 'Les ninjas',
-    texte: 'Chacun sa tenue, sa traînée et sa façon de courir.',
     liste: [
       { image: kage, nom: 'Kage' },
       { image: kurenai, nom: 'Kurenai' },

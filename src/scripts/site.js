@@ -1,5 +1,5 @@
 /**
- * LES TROIS SEULS COMPORTEMENTS DU SITE, et rien d’autre.
+ * LES QUATRE SEULS COMPORTEMENTS DU SITE, et rien d’autre.
  *
  * 1. LE LOGO SAUTE quand on le touche : le carré prend son élan et retombe, puis les
  *    lettres, une à une. C'est le geste du studio (planche du 12/10) ; sur l'accueil, le
@@ -7,6 +7,8 @@
  * 2. LES BLOCS APPARAISSENT quand on descend jusqu'à eux. Seulement ceux qui sont encore
  *    sous l'écran au chargement : ce qu'on voit déjà ne clignote jamais, et sans script
  *    la page est complète.
+ * 3. LE MENU RANGÉ se referme (plus bas).
+ * 4. LES NINJAS DE L'ACCUEIL courent, sautent et reviennent : `scripts/piste.js`.
  *
  * « Moins de mouvement » demandé par le téléphone : le logo ne saute plus, les blocs sont
  * là d'emblée.
@@ -49,17 +51,26 @@ document.querySelectorAll('[data-logo]').forEach((logo) => {
   });
 });
 
-/* 3. LE MENU RANGÉ SE REFERME (il s'ouvre sans script, c'est un <details>) : Échap, un
-   lien touché (un lien vers « /#studio » depuis l'accueil ne change pas de page, le
-   panneau resterait par-dessus), et l'écran qui s'élargit au-delà du menu rangé. */
+/* 3. LE MENU RANGÉ SE REFERME (il s'ouvre sans script, c'est un <details>) : Échap, et le
+   retour arrière (Safari rend la page de son cache telle qu'on l'a quittée, menu ouvert).
+   ⚠️ JAMAIS au toucher d'un lien : sur Safari d'iPhone, refermer le <details> pendant le
+   clic cache le lien et ANNULE la navigation — le menu se fermait et Shuriken Storm ne
+   s'ouvrait pas (vu au simulateur, iOS 26.5, le 12/10 — ⚠️ ses touchers arrivent parfois
+   en double ou en retard : ne juger qu'avec une sonde qui écrit les événements reçus). Seul un lien vers la page où l'on est déjà (« Nouveautés »
+   depuis Nouveautés) le referme, après coup. */
 const menu = document.querySelector('[data-menu]');
 if (menu) {
   const fermer = () => { menu.open = false; };
-  menu.querySelectorAll('.menu-panneau a').forEach((a) => a.addEventListener('click', fermer));
+  menu.querySelectorAll('.menu-panneau a').forEach((a) => a.addEventListener('click', () => {
+    if (new URL(a.href).pathname === location.pathname) setTimeout(fermer, 0);
+  }));
   addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && menu.open) { fermer(); menu.querySelector('summary').focus(); }
   });
-  matchMedia('(min-width: 861px)').addEventListener('change', (m) => { if (m.matches) fermer(); });
+  addEventListener('pageshow', fermer);
+  /* Juste avant la photo de la page qu'on quitte (transition entre pages) : sans ça, le
+     panneau noir « Jeux · Shuriken Storm » restait à l'écran pendant le fondu. */
+  addEventListener('pageswap', fermer);
 }
 
 if (!reduit.matches && 'IntersectionObserver' in window) {

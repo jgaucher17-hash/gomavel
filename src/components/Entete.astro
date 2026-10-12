@@ -1,6 +1,6 @@
 ---
 import Logo from './Logo.astro';
-import { PRODUITS, numero } from '../data/produits.js';
+import { PRODUITS } from '../data/produits.js';
 import { SITE } from '../data/site.js';
 const ici = Astro.url.pathname;
 /* UN ONGLET PAR PRODUIT (sa décision du 07/10) : le menu se lit dans le catalogue.
@@ -11,9 +11,9 @@ const ici = Astro.url.pathname;
 
    Un <details> et pas un bouton à script : le menu s'ouvre même si le script ne charge
    pas, et la CSP du site (scripts servis par le site seulement) n'a rien à autoriser. Le
-   script (`scripts/site.js`) ne fait que le refermer : Échap, un lien touché, l'écran
-   qui s'élargit. Les produits sont rangés par catégorie (« Jeux », un jour « Applis »)
-   dans l'ordre du catalogue. Sur grand écran, les liens restent en ligne. */
+   script (`scripts/site.js`) ne fait que le refermer : Échap, et le retour arrière. Les produits sont rangés par catégorie (« Jeux », un jour « Applis »)
+   dans l'ordre du catalogue. Les trois traits valent aussi sur ordinateur (sa note du
+   12/10 au soir : « il n'y a toujours pas sur PC les trois barres »). */
 const GROUPES = { jeu: 'Jeux', appli: 'Applis' };
 const groupes = Object.entries(GROUPES)
   .map(([cat, titre]) => ({ titre, produits: PRODUITS.filter((p) => p.categorie === cat) }))
@@ -23,16 +23,6 @@ const courant = (chemin) => (ici.startsWith(chemin) ? 'page' : undefined);
 <header class="entete">
   <div class="conteneur entete-in">
     <Logo />
-    <nav class="nav-large" aria-label="Navigation principale">
-      <ul class="liste-nue">
-        {PRODUITS.map((p) => (
-          <li><a href={`/${p.slug}/`} aria-current={courant(`/${p.slug}/`)}>{p.nom}</a></li>
-        ))}
-        <li><a href="/nouveautes/" aria-current={courant('/nouveautes/')}>Nouveautés</a></li>
-        <li><a href="/#studio">Studio</a></li>
-        {SITE.emails.studio && <li><a href="/#contact">Contact</a></li>}
-      </ul>
-    </nav>
     <details class="menu" data-menu>
       <summary aria-label="Menu">
         <span class="traits" aria-hidden="true"><span></span><span></span><span></span></span>
@@ -44,9 +34,7 @@ const courant = (chemin) => (ici.startsWith(chemin) ? 'page' : undefined);
             <ul class="liste-nue">
               {g.produits.map((p) => (
                 <li>
-                  <a href={`/${p.slug}/`} aria-current={courant(`/${p.slug}/`)}>
-                    <span class="menu-num">{numero(p.numero)}</span>{p.nom}
-                  </a>
+                  <a href={`/${p.slug}/`} aria-current={courant(`/${p.slug}/`)}>{p.nom}</a>
                 </li>
               ))}
             </ul>
@@ -54,7 +42,6 @@ const courant = (chemin) => (ici.startsWith(chemin) ? 'page' : undefined);
         ))}
         <ul class="liste-nue menu-studio">
           <li><a href="/nouveautes/" aria-current={courant('/nouveautes/')}>Nouveautés</a></li>
-          <li><a href="/#studio">Le studio</a></li>
           {SITE.emails.studio && <li><a href="/#contact">Contact</a></li>}
         </ul>
       </nav>

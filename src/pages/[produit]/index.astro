@@ -6,10 +6,22 @@
  * Le cadre de l'accueil s'est ouvert : l'image en grand, le vrai titre du produit dans
  * ses propres couleurs sur une bande noire, puis le produit en peu de mots. Le ton y est
  * celui du produit (tu), le studio reste sobre ailleurs (sa réponse « mixte », 12/10).
+ *
+ * « Trop de texte inutile » (12/10 au soir) : partis, le cartouche « N°01 · 2026 / Jeu
+ * mobile · iPhone et Android / En développement » sous le titre (la bande « Bientôt sur
+ * iPhone et Android » le dit en bas), « Images tirées du jeu, sans retouche » et la phrase
+ * sous « Les ninjas ».
+ *
+ * ⏸ SES DEUX ONGLETS À VENIR DANS CETTE PAGE (12/10 au soir) : « Code » (codes de
+ * réduction, cosmétiques uniques, caisses, donnés par des TikTok — un code par vidéo pour
+ * en mesurer l'effet) et « Connexion » par e-mail (le même que celui du compte du jeu,
+ * pour que le cadeau arrive dans la partie). Ils attendent le compte du jeu (A15, son
+ * projet Firebase) : aucun formulaire avant qu'il puisse livrer quelque chose. Le plan
+ * est dans ninja-runner/A-FAIRE.md, séance C2.
  */
 import { Image, Picture } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
-import { PRODUITS, numero, plateformes } from '../../data/produits.js';
+import { PRODUITS } from '../../data/produits.js';
 import { SITE } from '../../data/site.js';
 
 export function getStaticPaths() {
@@ -50,11 +62,6 @@ const jsonld = {
         <h1 id="t-heros">
           <Image src={p.titre.image} alt={p.titre.alt} widths={[560, 1120]} sizes="(max-width: 640px) 92vw, 560px" format="webp" loading="eager" />
         </h1>
-        <div class="meta">
-          <p class="label">{numero(p.numero)} · {p.annee}</p>
-          <p class="doux">{p.type} · {plateformes(p)}</p>
-          <p>{p.statut}</p>
-        </div>
       </div>
     </div>
   </section>
@@ -78,7 +85,6 @@ const jsonld = {
     <section class="galerie" aria-labelledby="t-galerie">
       <div class="conteneur galerie-tete">
         <h2 id="t-galerie" class="label">Les décors</h2>
-        <p>Images tirées du jeu, sans retouche.</p>
       </div>
       <div class="defile" tabindex="0" role="region" aria-label="Images du jeu, défilement horizontal">
         {p.galerie.map((g, i) => (
@@ -97,7 +103,6 @@ const jsonld = {
     <section class="personnages conteneur" aria-labelledby="t-personnages">
       <div class="personnages-tete">
         <h2 id="t-personnages">{p.personnages.titre}</h2>
-        <p>{p.personnages.texte}</p>
       </div>
       <ul class="troupe liste-nue" data-apparait>
         {p.personnages.liste.map((n) => (

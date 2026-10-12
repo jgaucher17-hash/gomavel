@@ -143,19 +143,12 @@ p { text-wrap: pretty; }
 /* ─── En-tête ────────────────────────────────────────────────────────────────── */
 .entete { position: relative; z-index: 10; background: var(--blanc); }
 .entete-in { min-height: var(--entete); display: flex; align-items: center; justify-content: space-between; gap: 12px 24px; padding-block: 18px; }
-.nav-large ul { display: flex; gap: 6px 30px; flex-wrap: wrap; }
-.nav-large a { font-size: 15px; font-weight: 500; text-decoration: none; padding-block: 4px; }
-.nav-large a[aria-current='page'] { background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat; }
 
-/* LE MENU RANGÉ (téléphone et tablette) : trois traits à droite du logo ; ouvert, un
-   panneau noir couvre la page sous l'en-tête, comme sur supercell.com — la bande noire
-   du studio, les jeux en gros. Les trois traits deviennent une croix. */
-.menu { display: none; }
-@media (max-width: 860px) {
-  .nav-large { display: none; }
-  .menu { display: block; }
-  .logo-svg { height: 28px; }
-}
+/* LE MENU RANGÉ, à toutes les tailles (sa note du 12/10 au soir : les trois barres aussi
+   sur PC) : trois traits à droite du logo ; ouvert, un panneau noir couvre la page sous
+   l'en-tête, comme sur supercell.com — la bande noire du studio, les jeux en gros. Les
+   trois traits deviennent une croix. */
+@media (max-width: 520px) { .logo-svg { height: 28px; } }
 .menu summary {
   list-style: none; cursor: pointer; -webkit-tap-highlight-color: transparent;
   display: grid; place-items: center; width: 48px; height: 48px; margin-right: -12px;
@@ -178,6 +171,8 @@ p { text-wrap: pretty; }
   padding: 36px var(--gout) calc(40px + env(safe-area-inset-bottom));
   display: grid; align-content: start; gap: 40px;
 }
+/* Sur grand écran, le contenu du panneau s'aligne sur la colonne du site. */
+@media (min-width: 1360px) { .menu-panneau { padding-inline: calc((100vw - var(--large)) / 2 + var(--gout)); } }
 @media (prefers-reduced-motion: no-preference) {
   .menu[open] .menu-panneau { animation: panneau .4s var(--ease); }
 }
@@ -189,7 +184,6 @@ p { text-wrap: pretty; }
   display: flex; align-items: baseline; gap: 14px;
   font-weight: 740; font-size: clamp(32px, 9vw, 48px); line-height: 1.05; letter-spacing: -.035em;
 }
-.menu-num { font-weight: 620; font-size: 12px; font-stretch: 125%; letter-spacing: .12em; color: var(--gris-noir); }
 .menu-studio { border-top: 1px solid var(--filet-noir); padding-top: 24px; }
 .menu-studio li + li { margin-top: 6px; }
 .menu-studio a { display: block; padding-block: 6px; font-size: 22px; font-weight: 560; }
@@ -198,12 +192,11 @@ p { text-wrap: pretty; }
 html:has(.menu[open]) { overflow: hidden; }
 
 /* ─── Accueil : l'accroche ───────────────────────────────────────────────────── */
-.ouverture { padding-block: clamp(48px, 9vw, 132px) clamp(56px, 8vw, 112px); }
-.ouverture .label { color: var(--gris); }
+.scene { min-height: calc(100svh - var(--entete)); display: flex; flex-direction: column; }
+.ouverture { flex: 1; display: flex; align-items: center; padding-block: clamp(24px, 4vw, 64px); }
 .accroche {
-  margin-top: clamp(20px, 3vw, 36px);
   font-weight: 760; font-stretch: 100%;
-  font-size: clamp(50px, 11.6vw, 172px); line-height: .9; letter-spacing: -.048em;
+  font-size: clamp(76px, min(21vw, 22svh), 230px); line-height: .88; letter-spacing: -.05em;
 }
 .accroche .ligne { display: block; overflow: hidden; padding-bottom: .06em; margin-bottom: -.06em; }
 .accroche .ligne > span { display: block; }
@@ -212,42 +205,24 @@ html:has(.menu[open]) { overflow: hidden; }
   .accroche .ligne:nth-child(2) > span { animation-delay: .12s; }
 }
 @keyframes monte { from { transform: translateY(105%); } to { transform: none; } }
-.ouverture-bas {
-  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 32px clamp(32px, 6vw, 96px);
-  margin-top: clamp(40px, 6vw, 80px); align-items: end;
-}
-.ouverture .presentation { font-size: clamp(19px, 1.7vw, 24px); line-height: 1.45; max-width: 30ch; }
-/* Le décor de l'accueil : des ninjas détourés qui courent sur un filet noir, le sol.
-   Chacun saute quand on le survole. Aucune capture d'écran ici (sa demande du 12/10). */
-.course { display: flex; align-items: flex-end; justify-content: flex-end; border-bottom: 1px solid var(--noir); padding-inline: 4px; }
-.course img { width: clamp(76px, 12vw, 140px); margin-left: -1.2%; transform-origin: 50% 100%; }
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .course img:hover { animation: bond .7s var(--ease); }
-}
-@media (max-width: 760px) {
-  .ouverture-bas { grid-template-columns: minmax(0, 1fr); }
-  .course { justify-content: flex-start; }
-}
+/* LA PISTE (sa demande du 12/10 au soir : des ninjas qui courent, sautent, reviennent).
+   Pleine largeur, le filet noir pour sol. Sans script, les ninjas sont alignés dessus ;
+   `.vivante` (scripts/piste.js) les place en absolu et les fait courir. La piste coupe
+   sur les côtés (pas de défilement horizontal quand un ninja sort à droite) mais PAS en
+   haut : un grand saut monte par-dessus l'accroche. La bande fait 15 images de 150×180 ;
+   le pied est à 8/240 du bas de son image, d'où le décalage sous le filet. */
+.piste { --h: clamp(130px, 16vw, 170px); --w: calc(var(--h) * 150 / 180); overflow-x: clip; padding-bottom: clamp(32px, 6vw, 72px); }
+.piste-sol { position: relative; height: var(--h); border-bottom: 1px solid var(--noir); display: flex; align-items: flex-end; }
+.coureur { width: var(--w); height: var(--h); overflow: hidden; flex: none; margin-bottom: calc(var(--h) * -8 / 240); -webkit-tap-highlight-color: transparent; }
+.coureur img { height: 100%; width: auto; max-width: none; }
+.piste.vivante { max-width: none; padding-inline: 0; }
+.piste.vivante .coureur { position: absolute; left: 0; bottom: 0; will-change: transform; cursor: pointer; }
+.piste.vivante .coureur img { will-change: transform; }
 
 /* ─── Bande noire ────────────────────────────────────────────────────────────── */
 .bande { background: var(--noir); color: var(--blanc); }
 .bande .doux, .bande .label.doux { color: var(--gris-noir); }
 .bande ::selection { background: var(--blanc); color: var(--noir); }
-
-/* ─── Le studio ──────────────────────────────────────────────────────────────── */
-.studio { padding-block: clamp(80px, 11vw, 168px); }
-.studio-grille { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 40px clamp(40px, 7vw, 120px); }
-.studio h2 { font-weight: 740; font-size: clamp(36px, 5.4vw, 76px); line-height: .98; letter-spacing: -.04em; margin-top: 18px; max-width: 12ch; }
-.studio .texte { display: grid; gap: 22px; font-size: clamp(18px, 1.5vw, 21px); line-height: 1.55; color: #e9e9e9; max-width: 44ch; padding-top: 8px; }
-.principes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(24px, 4vw, 56px); margin-top: clamp(56px, 8vw, 104px); border-top: 1px solid var(--filet-noir); }
-.principes > div { padding-top: 22px; }
-.principes h3 { font-weight: 620; font-size: 13px; font-stretch: 125%; letter-spacing: .12em; text-transform: uppercase; }
-.principes p { margin-top: 10px; color: #cfcfcf; font-size: 17px; max-width: 34ch; }
-@media (max-width: 860px) {
-  .studio-grille { grid-template-columns: minmax(0, 1fr); }
-  .principes { grid-template-columns: minmax(0, 1fr); }
-  .principes > div + div { margin-top: 18px; border-top: 1px solid var(--filet-noir); }
-}
 
 /* ─── Contact ────────────────────────────────────────────────────────────────── */
 .contact { padding-block: clamp(72px, 10vw, 140px); }
@@ -276,11 +251,8 @@ html:has(.menu[open]) { overflow: hidden; }
 .heros-bande-in { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 48px; align-items: end; }
 .heros-bande h1 { max-width: 560px; }
 .heros-bande h1 img { width: 100%; }
-.heros-bande .meta { display: grid; gap: 6px; text-align: right; font-size: 15px; }
-.heros-bande .meta .label { color: var(--blanc); }
 @media (max-width: 760px) {
   .heros-bande-in { grid-template-columns: minmax(0, 1fr); }
-  .heros-bande .meta { text-align: left; }
 }
 
 .intro { padding-block: clamp(64px, 9vw, 128px) clamp(40px, 6vw, 72px); }
@@ -416,9 +388,3 @@ a.etiquette:hover { background: var(--noir); color: var(--blanc); }
   .carte h3 + p { grid-area: texte; }
   .carte-image { grid-area: image; padding: 6px; }
 }
-
-/* ─── Accueil : le renvoi vers les nouveautés ───────────────────────────────── */
-.renvoi { padding-block: clamp(72px, 10vw, 140px); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 48px; align-items: end; }
-.renvoi .label { color: var(--gris); }
-.renvoi h2 { margin-top: 16px; font-weight: 740; font-size: clamp(32px, 4.6vw, 64px); line-height: 1; letter-spacing: -.04em; max-width: 16ch; }
-@media (max-width: 760px) { .renvoi { grid-template-columns: minmax(0, 1fr); } }

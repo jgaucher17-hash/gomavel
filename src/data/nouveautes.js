@@ -15,6 +15,10 @@
  *   - le compte : A15, sa réponse du 30/09 (Apple, Google, e-mail ; pas de téléphone) ;
  *     il attend son projet Firebase et le programme Apple : d'où « En préparation » ;
  *   - les huit langues : A14, faites le 30/09, la dernière passe avant la sortie ;
+ *   - les codes cadeaux : SA demande du 12/10 au soir (réductions, cosmétiques uniques,
+ *     caisses, donnés par des TikTok pour en mesurer l'effet), entrés sur le site par un
+ *     joueur connecté avec le mail de son compte : ils attendent le compte (A15), d'où
+ *     « En préparation » et AUCUN formulaire tant qu'il ne peut rien livrer ;
  *   - AUCUNE DATE pour ce qui arrive : la date de sortie est levée depuis le 30/09
  *     (« je préfère prendre mon temps »). « Bientôt » = c'est en cours de construction ;
  *     « En préparation » = décidé, pas commencé.
@@ -59,16 +63,15 @@ export const NOUVEAUTES = [
   {
     produit: 'shuriken-storm',
     etat: 'preparation',
+    titre: 'Des codes cadeaux',
+    texte:
+      'Des codes à entrer ici, sur le site, pour une tenue introuvable ailleurs, une caisse ou une réduction. Ils se trouveront sur TikTok.',
+  },
+  {
+    produit: 'shuriken-storm',
+    etat: 'preparation',
     titre: 'Ta partie sur tous tes appareils',
     texte:
       'Un compte, par Apple, Google ou e-mail, pour retrouver ta progression sur un autre téléphone et ne jamais la perdre.',
-  },
-  {
-    produit: null,
-    etat: 'sorti',
-    date: '2026-10-12',
-    titre: 'Gomavel ouvre son site',
-    texte:
-      'Chaque application et chaque jeu du studio y aura sa page, numérotée dans l’ordre de sortie. Shuriken Storm est le N°01.',
   },
 ];
