@@ -103,27 +103,28 @@ p { text-wrap: pretty; }
 .fleche:hover span[aria-hidden], .fenetre:hover ~ .cartel .fleche span[aria-hidden] { transform: translateX(5px); }
 
 /* ─── La marque ──────────────────────────────────────────────────────────────── */
+/* `.marque` : le carré seul (pied de page, icônes). `.logo-svg` : [G]OMAVEL, le carré
+   tenant la place de la première lettre (sa demande du 12/10 au soir). */
 .marque { width: 30px; height: 30px; flex: none; }
-.mot { height: 12.6px; width: auto; flex: none; overflow: visible; }
-.mot .lettre, .marque { transform-box: fill-box; transform-origin: 50% 100%; }
+.logo-svg { height: 22px; width: auto; flex: none; overflow: visible; }
+.logo-svg .lettre, .marque { transform-box: fill-box; transform-origin: 50% 100%; }
 .logo {
-  display: inline-flex; align-items: center; gap: 12px;
+  display: inline-flex; align-items: center;
   text-decoration: none; color: var(--noir);
   -webkit-tap-highlight-color: transparent;
 }
 
-/* À l'arrivée sur l'accueil, les lettres retombent une à une : en CSS, pour qu'aucune
-   image ne s'affiche avant l'animation puis ne disparaisse. Une seule fois par chargement. */
+/* À l'arrivée sur l'accueil, le carré rebondit et les lettres retombent une à une : en
+   CSS, pour qu'aucune image ne s'affiche avant l'animation puis ne disparaisse. */
 @media (prefers-reduced-motion: no-preference) {
-  .accueil .entete .marque { animation: bond .8s var(--ease) both; }
-  .accueil .entete .mot .lettre { animation: chute .72s cubic-bezier(.3, .7, .35, 1) both; }
-  .accueil .entete .mot .lettre:nth-child(1) { animation-delay: .10s; }
-  .accueil .entete .mot .lettre:nth-child(2) { animation-delay: .15s; }
-  .accueil .entete .mot .lettre:nth-child(3) { animation-delay: .20s; }
-  .accueil .entete .mot .lettre:nth-child(4) { animation-delay: .25s; }
-  .accueil .entete .mot .lettre:nth-child(5) { animation-delay: .30s; }
-  .accueil .entete .mot .lettre:nth-child(6) { animation-delay: .35s; }
-  .accueil .entete .mot .lettre:nth-child(7) { animation-delay: .40s; }
+  .accueil .entete .carre { animation: bond .8s var(--ease) both; }
+  .accueil .entete .lettre:not(.carre) { animation: chute .72s cubic-bezier(.3, .7, .35, 1) both; }
+  .accueil .entete .lettre:nth-child(1):not(.carre) { animation-delay: .14s; }
+  .accueil .entete .lettre:nth-child(2) { animation-delay: .19s; }
+  .accueil .entete .lettre:nth-child(3) { animation-delay: .24s; }
+  .accueil .entete .lettre:nth-child(4) { animation-delay: .29s; }
+  .accueil .entete .lettre:nth-child(5) { animation-delay: .34s; }
+  .accueil .entete .lettre:nth-child(6) { animation-delay: .39s; }
 }
 @keyframes chute {
   0% { transform: translateY(-120%); opacity: 0; }
@@ -148,8 +149,7 @@ p { text-wrap: pretty; }
 @media (max-width: 520px) {
   .entete nav ul { gap: 4px 20px; }
   .entete nav a { font-size: 14px; }
-  .marque { width: 28px; height: 28px; }
-  .mot { height: 11.6px; }
+  .logo-svg { height: 19px; }
 }
 
 /* ─── Accueil : l'accroche ───────────────────────────────────────────────────── */
@@ -172,70 +172,17 @@ p { text-wrap: pretty; }
   margin-top: clamp(40px, 6vw, 80px); align-items: end;
 }
 .ouverture .presentation { font-size: clamp(19px, 1.7vw, 24px); line-height: 1.45; max-width: 30ch; }
-.index { border-top: 1px solid var(--noir); }
-.index li { border-bottom: 1px solid var(--filet); }
-.index a { display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; gap: 12px; align-items: baseline; padding: 14px 0; text-decoration: none; }
-.index .n { font-weight: 620; font-size: 12px; font-stretch: 125%; letter-spacing: .08em; }
-.index .nom { font-weight: 650; font-size: 17px; }
-.index .meta { color: var(--gris); font-size: 14px; }
-.index a:hover .nom { text-decoration: underline; text-decoration-thickness: 1px; }
+/* Le décor de l'accueil : des ninjas détourés qui courent sur un filet noir, le sol.
+   Chacun saute quand on le survole. Aucune capture d'écran ici (sa demande du 12/10). */
+.course { display: flex; align-items: flex-end; justify-content: flex-end; border-bottom: 1px solid var(--noir); padding-inline: 4px; }
+.course img { width: clamp(76px, 12vw, 140px); margin-left: -1.2%; transform-origin: 50% 100%; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .course img:hover { animation: bond .7s var(--ease); }
+}
 @media (max-width: 760px) {
   .ouverture-bas { grid-template-columns: minmax(0, 1fr); }
-  .index .meta { grid-column: 2; }
+  .course { justify-content: flex-start; }
 }
-
-/* ─── La fenêtre : un produit dans son cadre ─────────────────────────────────── */
-/* Au repos : un filet noir, un passe-partout blanc, l'image dedans — accroché dans la
-   largeur du texte. Là où le navigateur sait lier une animation au défilement, le cadre
-   S'OUVRE quand on descend : les côtés de l'image s'écartent jusqu'aux bords de l'écran
-   et le filet s'efface. Un navigateur qui ne sait pas (ou « moins de mouvement ») garde
-   le cadre fermé : c'est l'état de l'identité, pas un repli. */
-.catalogue { padding-bottom: clamp(64px, 10vw, 140px); }
-.produit + .produit { margin-top: clamp(72px, 10vw, 140px); }
-.fenetre {
-  --ecart: calc(var(--gout) + var(--mat) + 1px);
-  display: block; position: relative; margin-block: calc(var(--mat) + 1px);
-  color: var(--noir); text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
-}
-.fenetre::after {
-  content: ''; position: absolute; pointer-events: none;
-  top: calc(-1 * (var(--mat) + 1px)); bottom: calc(-1 * (var(--mat) + 1px));
-  left: var(--gout); right: var(--gout);
-  border: 1px solid var(--noir);
-}
-.fenetre-vue {
-  overflow: hidden; aspect-ratio: 2560 / 1184; max-height: 86vh;
-  clip-path: inset(0 var(--ecart));
-}
-.fenetre-vue img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.1s var(--ease); }
-@media (hover: hover) { .fenetre:hover .fenetre-vue img { transform: scale(1.025); } }
-@media (min-width: 1468px) {
-  /* Au-delà de la largeur du texte, le cadre reste aligné sur la colonne. */
-  .fenetre { --ecart: calc((100vw - var(--large)) / 2 + var(--gout) + var(--mat) + 1px); }
-  .fenetre::after { left: calc((100vw - var(--large)) / 2 + var(--gout)); right: calc((100vw - var(--large)) / 2 + var(--gout)); }
-}
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .fenetre-vue { animation: ouvre linear both; animation-timeline: view(); animation-range: entry 35% cover 52%; }
-    .fenetre::after { animation: efface linear both; animation-timeline: view(); animation-range: entry 35% cover 52%; }
-  }
-}
-@keyframes ouvre { from { clip-path: inset(0 var(--ecart)); } to { clip-path: inset(0 0); } }
-@keyframes efface {
-  from { left: var(--gout); right: var(--gout); opacity: 1; }
-  to { left: calc(-1 * (var(--mat) + 1px)); right: calc(-1 * (var(--mat) + 1px)); opacity: 0; }
-}
-
-/* Le cartel : ce qu'une galerie colle à côté d'une œuvre. */
-.cartel {
-  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto; gap: 16px clamp(24px, 4vw, 64px);
-  align-items: start; margin-top: 28px;
-}
-.cartel h2 { font-weight: 720; font-size: clamp(26px, 3vw, 40px); line-height: 1; letter-spacing: -.03em; margin-top: 10px; }
-.cartel .resume { font-size: clamp(17px, 1.4vw, 20px); line-height: 1.45; }
-.cartel .meta { color: var(--gris); font-size: 14px; margin-top: 8px; }
-@media (max-width: 860px) { .cartel { grid-template-columns: minmax(0, 1fr); } }
 
 /* ─── Bande noire ────────────────────────────────────────────────────────────── */
 .bande { background: var(--noir); color: var(--blanc); }

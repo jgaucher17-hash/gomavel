@@ -1,9 +1,18 @@
 ---
-import Marque from './Marque.astro';
-import Mot from './Mot.astro';
+/** [G]OMAVEL : le carré noir au G blanc tient la place de la première lettre. */
+import { LOGO_LARGEUR, LOGO_HAUTEUR, LOGO_CARRE as C, LOGO_LETTRES, LOGO_DECALAGE } from '../data/logo.js';
+const { lien = true } = Astro.props;
+const Balise = lien ? 'a' : 'span';
 ---
-<a class="logo" href="/" data-logo>
-  <Marque />
-  <Mot />
-  <span class="visuellement-cache">Gomavel, accueil</span>
-</a>
+<Balise class="logo" href={lien ? '/' : undefined} data-logo={lien ? '' : undefined}>
+  <svg class="logo-svg" viewBox={`0 0 ${LOGO_LARGEUR} ${LOGO_HAUTEUR}`} aria-hidden="true" focusable="false">
+    <g class="lettre carre">
+      <rect x={C.x} y={C.y} width={C.cote} height={C.cote} fill="#000" />
+      <path d={C.g} fill="#fff" transform={`translate(${C.x} ${C.y}) scale(${C.echelle}) ${C.grand}`} />
+    </g>
+    <g fill="currentColor" transform={`translate(${LOGO_DECALAGE} 0)`}>
+      {LOGO_LETTRES.map((d) => <g class="lettre"><path d={d} /></g>)}
+    </g>
+  </svg>
+  <span class="visuellement-cache">Gomavel{lien ? ', accueil' : ''}</span>
+</Balise>

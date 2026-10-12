@@ -1,16 +1,24 @@
 ---
 /**
- * L'ACCUEIL — le studio d'abord, ses produits ensuite.
+ * L'ACCUEIL — le studio, et lui seul.
  *
- * Sa note du 12/10 : « trop poussé sur le gameplay » et « l'entreprise fait aussi les
- * applis mobiles hors jeux ». L'accueil ne raconte donc aucun jeu : il dit ce qu'est le
- * studio, accroche chaque produit dans son cadre (un cartel, comme dans une galerie), et
- * laisse la page du produit parler de lui.
+ * Sa demande du 12/10 au soir : « pas de capture d'écran du jeu dans l'accueil, que des
+ * petits skins ou éléments du jeu détourés » et « quand on arrive sur le site on ne doit
+ * pas voir Shuriken Storm direct, on doit cliquer sur son onglet ». Aucun produit n'est
+ * donc nommé ni montré ici : on y entre par l'onglet du menu. Les ninjas qui courent sur
+ * le filet noir sont un décor (alt vide), pas une vitrine.
  */
-import { Picture } from 'astro:assets';
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import { PRODUITS, numero, plateformes } from '../data/produits.js';
 import { SITE } from '../data/site.js';
+import kage from '../assets/produits/shuriken-storm/ninja-kage.png';
+import kurenai from '../assets/produits/shuriken-storm/ninja-kurenai.png';
+import ronin from '../assets/produits/shuriken-storm/ninja-ronin.png';
+import raijin from '../assets/produits/shuriken-storm/ninja-raijin.png';
+import tengu from '../assets/produits/shuriken-storm/ninja-tengu.png';
+import kagerou from '../assets/produits/shuriken-storm/ninja-kagerou.png';
+
+const decor = [kage, kurenai, ronin, raijin, tengu, kagerou];
 
 const [debut, fin] = (() => {
   const i = SITE.accroche.indexOf(',');
@@ -28,7 +36,7 @@ const jsonld = {
   slogan: SITE.accroche,
 };
 ---
-<Base titre={`Gomavel — ${SITE.accroche}`} classe="accueil" jsonld={jsonld} attendu="catalogue">
+<Base titre={`Gomavel — ${SITE.accroche}`} classe="accueil" jsonld={jsonld}>
   <section class="ouverture conteneur" aria-labelledby="t-accroche">
     <p class="label">Applications et jeux mobiles</p>
     <h1 id="t-accroche" class="accroche">
@@ -37,53 +45,12 @@ const jsonld = {
     </h1>
     <div class="ouverture-bas">
       <p class="presentation">Gomavel est un studio indépendant, en France. Il conçoit des applications et des jeux pour iPhone et Android.</p>
-      <nav aria-label="Le catalogue">
-        <ol class="index liste-nue">
-          {PRODUITS.map((p) => (
-            <li>
-              <a href={`#${p.slug}`}>
-                <span class="n">{numero(p.numero)}</span>
-                <span class="nom">{p.nom}</span>
-                <span class="meta">{p.type} · {p.statut.toLowerCase()}</span>
-              </a>
-            </li>
-          ))}
-        </ol>
-      </nav>
+      <div class="course" aria-hidden="true">
+        {decor.map((img) => (
+          <Image src={img} alt="" widths={[120, 200]} sizes="(max-width: 760px) 15vw, 100px" format="webp" loading="eager" />
+        ))}
+      </div>
     </div>
-  </section>
-
-  <section id="catalogue" class="catalogue" aria-label="Catalogue">
-    {PRODUITS.map((p) => (
-      <article class="produit" id={p.slug} aria-labelledby={`t-${p.slug}`}>
-        {/* Le cadre est un lien pour la souris et le doigt ; le lecteur d'écran et le
-            clavier passent par le lien du cartel, sans doublon. */}
-        <a class="fenetre" href={`/${p.slug}/`} tabindex="-1" aria-hidden="true">
-          <div class="fenetre-vue">
-            <Picture
-              src={p.heros.image}
-              alt=""
-              widths={[640, 960, 1280, 1920, 2560]}
-              sizes="100vw"
-              formats={['avif', 'webp']}
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-        </a>
-        <div class="conteneur cartel" data-apparait>
-          <div>
-            <p class="label">{numero(p.numero)} · {p.annee}</p>
-            <h2 id={`t-${p.slug}`}>{p.nom}</h2>
-          </div>
-          <div>
-            <p class="resume">{p.resume}</p>
-            <p class="meta">{p.type} · {plateformes(p)} · {p.statut}</p>
-          </div>
-          <a class="fleche" href={`/${p.slug}/`}>Découvrir <span class="visuellement-cache">{p.nom}</span><span aria-hidden="true">→</span></a>
-        </div>
-      </article>
-    ))}
   </section>
 
   <section id="studio" class="bande studio" aria-labelledby="t-studio">

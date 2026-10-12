@@ -19,14 +19,16 @@ import { join, dirname } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const RACINE = join(dirname(fileURLToPath(import.meta.url)), '..');
-const { G_CARRE, MOT, MOT_LARGEUR, MOT_HAUTEUR } = await import(pathToFileURL(join(RACINE, 'src/data/marque.js')).href);
+const { G_CARRE } = await import(pathToFileURL(join(RACINE, 'src/data/marque.js')).href);
+const L = await import(pathToFileURL(join(RACINE, 'src/data/logo.js')).href);
 const { SITE } = await import(pathToFileURL(join(RACINE, 'src/data/site.js')).href);
 const produits = await Promise.all(readdirSync(join(RACINE, 'src/produits')).filter((f) => f.endsWith('.js'))
   .map(async (f) => ({ slug: f.replace('.js', ''), src: readFileSync(join(RACINE, 'src/produits', f), 'utf8') })));
 
 const police = pathToFileURL(join(RACINE, 'node_modules/@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2')).href;
 const carre = (px) => `<svg width="${px}" height="${px}" viewBox="0 0 100 100"><rect width="100" height="100" fill="#000"/><path d="${G_CARRE}" fill="#fff"/></svg>`;
-const mot = (h, c = '#000') => `<svg height="${h}" viewBox="0 0 ${MOT_LARGEUR} ${MOT_HAUTEUR}" style="width:auto"><g fill="${c}">${MOT.map((d) => `<path d="${d}"/>`).join('')}</g></svg>`;
+/* [G]OMAVEL, le carré tenant la place de la première lettre (src/data/logo.js). */
+const logo = (h) => `<svg height="${h}" viewBox="0 0 ${L.LOGO_LARGEUR} ${L.LOGO_HAUTEUR}" style="width:auto"><rect x="0" y="${L.LOGO_CARRE.y}" width="${L.LOGO_CARRE.cote}" height="${L.LOGO_CARRE.cote}"/><path d="${L.LOGO_CARRE.g}" fill="#fff" transform="translate(0 ${L.LOGO_CARRE.y}) scale(${L.LOGO_CARRE.echelle}) ${L.LOGO_CARRE.grand}"/><g transform="translate(${L.LOGO_DECALAGE} 0)">${L.LOGO_LETTRES.map((d) => `<path d="${d}"/>`).join('')}</g></svg>`;
 const base = (corps, w, h) => `<!doctype html><meta charset="utf-8"><style>
 @font-face { font-family: A; src: url(${police}) format('woff2'); font-weight: 100 900; font-stretch: 62% 125%; }
 * { margin: 0; box-sizing: border-box; } html, body { width: ${w}px; height: ${h}px; overflow: hidden; background: #fff; }
@@ -41,7 +43,7 @@ PAGES.push({ fichier: 'icon-512.png', w: 512, h: 512, html: base(carre(512), 512
 
 const [debut, fin] = SITE.accroche.split(/(?<=,)\s*/);
 PAGES.push({ fichier: 'og/gomavel.png', w: 1200, h: 630, html: base(`
-  <div style="position:absolute;left:72px;top:68px;display:flex;align-items:center;gap:22px">${carre(64)}${mot(26)}</div>
+  <div style="position:absolute;left:72px;top:72px">${logo(46)}</div>
   <p style="position:absolute;left:68px;bottom:96px;font-weight:760;font-size:128px;line-height:.9;letter-spacing:-.048em">${debut}<br>${fin ?? ''}</p>
   <p class="label" style="position:absolute;right:72px;bottom:104px;font-size:15px;color:#646464">Applications et jeux mobiles</p>
   <div style="position:absolute;left:72px;right:72px;bottom:64px;height:1px;background:#000"></div>`, 1200, 630) });

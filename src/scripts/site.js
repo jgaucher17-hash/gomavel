@@ -15,7 +15,7 @@ const reduit = matchMedia('(prefers-reduced-motion: reduce)');
 
 function sauter(logo) {
   if (reduit.matches || !logo.animate) return;
-  const marque = logo.querySelector('.marque');
+  const marque = logo.querySelector('.carre');
   marque?.animate(
     [
       { transform: 'none' },
@@ -26,7 +26,7 @@ function sauter(logo) {
     ],
     { duration: 640, easing: 'cubic-bezier(.33,.66,.36,1)' },
   );
-  logo.querySelectorAll('.lettre').forEach((l, i) => {
+  logo.querySelectorAll('.lettre:not(.carre)').forEach((l, i) => {
     l.animate(
       [
         { transform: 'none' },
