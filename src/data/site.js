@@ -22,17 +22,14 @@ export const SITE = {
   description:
     "Gomavel est un studio indépendant d'applications et de jeux mobiles, en France. Peu de produits, faits avec soin, pour iPhone et Android.",
   /* L'ADRESSE OÙ VIT LE SITE : elle fait les liens absolus (images de partage, plan du
-     site, données structurées). gomavel.pages.dev tant que le domaine n'est pas acheté
-     (sa réponse du 12/10) ; à passer à https://gomavel.com le jour de l'ouverture, avec
-     `indexable` ci-dessous. */
-  url: 'https://gomavel.pages.dev',
+     site, données structurées). gomavel.com, acheté le 20/10/2026 ; gomavel.pages.dev
+     reste en ligne mais ses pages déclarent celle-ci comme adresse canonique. */
+  url: 'https://gomavel.com',
   fondation: 2026,
 
-  /* FAUX TANT QUE LE SITE VIT SUR gomavel.pages.dev (sa réponse du 12/10 : le domaine
-     plus tard). Faux = `noindex` sur chaque page et robots.txt fermé : un moteur qui
-     indexerait l'adresse provisoire la garderait des mois après l'ouverture du vrai
-     domaine. À passer à `true` le jour où gomavel.com pointe ici (et robots.txt avec). */
-  indexable: false,
+  /* VRAI DEPUIS LE 20/10 (gomavel.com pointe ici). Faux = `noindex` sur chaque page et
+     robots.txt fermé, à remettre si le site retournait sur une adresse provisoire. */
+  indexable: true,
 
   emails: {
     studio: 'gomavelstudio@gmail.com',
