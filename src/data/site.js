@@ -35,7 +35,7 @@ export const SITE = {
   indexable: false,
 
   emails: {
-    studio: '',
+    studio: 'gomavelstudio@gmail.com',
   },
 
   /* LES MENTIONS LÉGALES D'UN ENTREPRENEUR INDIVIDUEL (service-public.fr, F31228) : nom
