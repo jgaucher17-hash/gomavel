@@ -36,6 +36,9 @@ const robots = SITE.indexable && indexer ? 'index, follow' : 'noindex, nofollow'
     <title>{titre}</title>
     <meta name="description" content={description} />
     <meta name="robots" content={robots} />
+    <!-- Propriété de gomavel.com dans la Search Console (jgaucher17), exigée par la Play Console
+         pour valider le site de l'organisation (21/10/2026). Ne pas retirer : Google revérifie. -->
+    <meta name="google-site-verification" content="P-H1jhKMV651Cjn0m63M60yRtwyBF565Un0bVl5VK3w" />
     <link rel="canonical" href={canonique} />
     <meta name="theme-color" content="#ffffff" />
     <meta name="color-scheme" content="light" />
